@@ -369,6 +369,25 @@ body {
   letter-spacing: -0.12px;
 }
 
+/* Style Tags */
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+.detail-tag {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 980px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: -0.08px;
+  background: rgba(41, 151, 255, 0.12);
+  color: var(--apple-link-blue-dark);
+  border: 0.5px solid rgba(41, 151, 255, 0.2);
+}
+
 .detail-section {
   padding: 20px 24px;
   border-top: 0.5px solid rgba(255, 255, 255, 0.06);
@@ -811,6 +830,7 @@ body {
       <div class="detail-name" id="detail-name"></div>
       <div class="detail-title" id="detail-title"></div>
       <div class="detail-org-badge" id="detail-org"></div>
+      <div class="detail-tags" id="detail-tags"></div>
     </div>
   </div>
   <div class="detail-section">
@@ -1404,6 +1424,37 @@ function openDetail(d) {
   orgEl.style.background = c + "18";
   orgEl.style.color = c;
   orgEl.style.border = `0.5px solid ${c}32`;
+
+  // Style tags
+  const investorTags = {
+    shennp: ["Full-stack", "Growth", "Consumer", "AI", "Global"],
+    zhanglei: ["Value investing", "Long-term", "Hardware", "Consumer", "EV"],
+    xiongxg: ["Pioneer", "Early-stage", "Internet", "Consumer"],
+    zhangying: ["Early/Growth", "Mobility", "AI", "Blunt style"],
+    zhuxiaohu: ["Bold bets", "Early-stage", "AI hardware", "AI toys", "Fast decisions"],
+    caoyi: ["Early-stage", "Platform", "AI native", "Robotics"],
+    chenwg: ["Embodied AI", "Humanoid", "Deep tech", "Multi-round"],
+    huangmm: ["Hardware first", "Smart manufacturing", "NEV", "Robotics"],
+    lizhu: ["Angel", "High volume", "AI", "Robotics", "500+ deals"],
+    wushichun: ["Angel", "Robot", "Consumer", "Chinese dream"],
+    liuqin: ["Conviction", "Patience", "Mega returns", "Mobile"],
+    leijun: ["Ecosystem builder", "Hardware", "IoT", "Mass market"],
+    shenjin: ["CVC", "Chip+Hardware", "Cross-border", "Strategic"],
+    lizexiang2: ["Incubator", "Seed", "Hardware", "Mentor-investor", "60+ companies"],
+    gaobq2: ["Angel", "Rescue investor", "Hardware", "Professor"],
+    luqi2: ["Accelerator", "Bridge CN-US", "AI", "340+ companies"],
+    vinodkhosla: ["Breakthrough tech", "Deep tech", "Climate", "Robotics", "Bold"],
+    marca16z: ["Platform", "Mega fund", "AI infra", "Defense tech", "Crypto"],
+    peterthiel: ["Contrarian", "0 to 1", "Defense", "Fellowship"],
+    joshwolfe: ["Deep tech", "Defense", "Frontier", "Sci-fi investing"],
+    jeffbezos: ["Personal bets", "Humanoid", "Mega checks", "$200B+"],
+    jensenhuang: ["GPU ecosystem", "AI compute", "Corporate VC", "Platform"],
+    masason: ["Mega fund", "Vision", "Bold bets", "Asia focus"],
+    natfriedman: ["Angel", "AI native", "Ex-operator", "Household robot"],
+  };
+  const tagsEl = document.getElementById("detail-tags");
+  const tags = investorTags[d.id] || [];
+  tagsEl.innerHTML = tags.map(t => `<span class="detail-tag">${t}</span>`).join("");
 
   // Papers
   const papersEl = document.getElementById("detail-papers");
