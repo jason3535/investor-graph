@@ -902,6 +902,13 @@ const scholars = [
   {id:"jensenhuang",name:"Jensen Huang",org:"NVIDIA",title:"NVIDIA Founder & CEO · AI Compute Godfather",field:["corporate"],bio:"Born 1963 Taiwan, grew up Oregon. Oregon State EE, Stanford MS. Co-founded NVIDIA 1993. NVIDIA Ventures invested in almost every major AI/robotics company. Market cap: $3T+. The godfather of AI compute — every robot and AI model runs on his GPUs.",papers:[{y:"1993",t:"Co-founded NVIDIA"},{y:"2024",t:"NVIDIA $3T+, invested Figure/Physical Intelligence"}]},
   {id:"masason",name:"Masayoshi Son",org:"SoftBank Vision Fund",title:"SoftBank Founder · $100B Vision Fund",field:["us-vc","corporate"],bio:"Born 1957 Japan (Korean descent). UC Berkeley Economics. Founded SoftBank 1981. Vision Fund 1: $100B (2017, largest ever). Invested: ARM, Boston Dynamics, Cruise, Humane ($230M). Bold bets on robotics and AI hardware. Controversial spray and pray approach.",papers:[{y:"2017",t:"$100B Vision Fund 1"},{y:"2023",t:"Invested Humane $230M"}]},
   {id:"natfriedman",name:"Nat Friedman",org:"AI Angel Investor",title:"Former GitHub CEO · Hardware Angel",field:["angel","us-vc"],bio:"Former GitHub CEO (2018-2021, acquired by Microsoft for $7.5B). Active angel investor in AI and hardware. Co-led: The Bot Company $150M seed with Kyle Vogt. Also invested: Figure AI, multiple AI startups. Represents the new wave of tech-executive-turned-hardware-investor.",papers:[{y:"2024",t:"Co-led Bot Company $150M"},{y:"2025",t:"Active AI hardware angel"}]},
+  {id:"daiyusen",name:"Dai Yusen",org:"ZhenFund",title:"Managing Partner · Ex-Jumei Co-founder",field:["china-vc","early"],bio:"Tsinghua Industrial Engineering BS. Stanford MS Management Science (dropped out). Co-founded Jumei (cosmetics e-commerce) with Chen Ou 2009, VP of Product. Jumei NYSE IPO 2014 — one of the youngest co-founders on NYSE. Joined ZhenFund (Zhenge) as Managing Partner 2017. Invested: Moonshot AI/Kimi (Yang Zhilin), Guanxia, Party Animals, Dongfang Space. Forbes China 100 VCs 2024. Focus: AI applications, consumer, deep tech. Known for deep AI theses and young founder networks.",papers:[{y:"2014",t:"Jumei NYSE IPO co-founder"},{y:"2017",t:"Joined ZhenFund"},{y:"2024",t:"Invested Moonshot AI/Kimi"}]},
+  {id:"liuyuan",name:"Liu Yuan",org:"ZhenFund",title:"Partner · AI & Hardware Investor",field:["china-vc","early"],bio:"ZhenFund (Zhenge) Partner. Active in AI and hardware investments. Notable: evaluated and commented on Manus founder Xiao Hong, describing unconventional founders who succeed through tenacity rather than pedigree. Part of ZhenFund's new generation of partners focusing on AI-native products and hardware innovation.",papers:[{y:"2025",t:"Active AI/hardware investments"}]},
+  {id:"xudl",name:"Xu Dalai",org:"Shunwei Capital",title:"Co-founder & CEO · Lei Jun's Investment Arm",field:["china-vc"],bio:"Co-founded Shunwei Capital (Shunwei) with Lei Jun 2011. AUM: $3B+ (USD + RMB funds). CEO managing all investments. Deep focus: mobile internet, deep tech, AI, robotics, sustainability. Invested: Unitree (multiple rounds), Qianxun Intelligence (PreA+ follow-on), Shouxing Tech (led round), forming a triangle of robot body + embodied AI model + emotional interaction. Works in lockstep with Xiaomi ecosystem.",papers:[{y:"2011",t:"Co-founded Shunwei with Lei Jun"},{y:"2025",t:"Unitree/Qianxun/Shouxing robot triangle"}]},
+  {id:"kuangzp",name:"Kuang Ziping",org:"Qiming Venture Partners",title:"Founding Managing Partner · Stanford/Berkeley",field:["china-vc"],bio:"Born in Guangzhou. UCSF CS BS, Stanford CS MS, UC Berkeley MBA. Founded Qiming Venture Partners (Qiming) 2006. Invested in 580+ companies, 210+ IPO/exits. AUM: $9.5B. Focus 2025: AI as key investment direction. Invested: Galbot/Yinhe Tongyong, multiple robotics/AI companies. One of the most experienced VC leaders in China.",papers:[{y:"2006",t:"Founded Qiming"},{y:"2025",t:"580+ companies, 210+ exits, $9.5B AUM"}]},
+  {id:"dengfeng",name:"Deng Feng",org:"Northern Light VC",title:"Founder · NetScreen Co-founder",field:["china-vc"],bio:"Co-founded NetScreen Technologies in Silicon Valley (acquired by Juniper Networks for $4B, 2004). Founded Northern Light Venture Capital (Beijiguang) 2005. One of China's most respected deep tech VCs. Focus: enterprise tech, semiconductors, AI, advanced manufacturing. Bridges Silicon Valley and China tech.",papers:[{y:"2004",t:"NetScreen sold to Juniper $4B"},{y:"2005",t:"Founded Northern Light VC"}]},
+  {id:"hezhiqiang",name:"He Zhiqiang",org:"Lenovo Capital",title:"President · Lenovo's Tech VC Arm",field:["cvc"],bio:"President of Lenovo Capital and Incubator (Lenovo Chuangtou). CVC arm of Lenovo Group. Focus: AI, robotics, IoT, smart devices, enterprise tech. Invested: multiple embodied AI and hardware startups. Unique advantage: can offer Lenovo's global supply chain and go-to-market resources to portfolio companies.",papers:[{y:"2020",t:"Active in robotics/AI investments"},{y:"2025",t:"Lenovo Capital hardware portfolio"}]},
+  {id:"gaorong",name:"Gao Rong team",org:"GL Ventures",title:"GL Ventures · Embodied AI Backer",field:["china-vc"],bio:"GL Ventures (Gaorong Chuangtou) is a leading China early-stage VC. Active in embodied AI: invested in XingHaiTu (Starmap), multiple robotics companies. Known for thesis-driven, concentrated bets on category-defining companies. Part of the top tier of China VC backing the 2025-2026 robot wave.",papers:[{y:"2025",t:"Invested XingHaiTu and robot companies"}]},
 ];
 
 const connections = [
@@ -940,6 +947,19 @@ const connections = [
   {source:"shennp",target:"vinodkhosla",type:"industry-peer",label:"Global VC titans, both Forbes Midas"},
   {source:"zhanglei",target:"masason",type:"industry-peer",label:"Mega-fund investors, both Asia-focused"},
   {source:"zhangying",target:"caoyi",type:"industry-peer",label:"China VC next-generation leaders"},
+  {source:"daiyusen",target:"liuyuan",type:"former-colleague",label:"ZhenFund managing partners"},
+  {source:"daiyusen",target:"zhuxiaohu",type:"industry-peer",label:"Both bold early AI/consumer bets"},
+  {source:"daiyusen",target:"caoyi",type:"industry-peer",label:"Young China VC leaders"},
+  {source:"xudl",target:"leijun",type:"former-colleague",label:"Co-founded Shunwei Capital together"},
+  {source:"xudl",target:"chenwg",type:"coinvested",label:"Both invested Unitree/robot ecosystem"},
+  {source:"kuangzp",target:"shennp",type:"industry-peer",label:"China top VC founding generation"},
+  {source:"kuangzp",target:"chenwg",type:"coinvested",label:"Both invested Galbot embodied AI"},
+  {source:"dengfeng",target:"kuangzp",type:"industry-peer",label:"China deep tech VC founders"},
+  {source:"dengfeng",target:"huangmm",type:"industry-peer",label:"Both deep tech / hardware focused"},
+  {source:"hezhiqiang",target:"leijun",type:"industry-peer",label:"CVC peers (Lenovo vs Xiaomi/Shunwei)"},
+  {source:"hezhiqiang",target:"shenjin",type:"industry-peer",label:"CVC peers (Lenovo vs Qualcomm)"},
+  {source:"gaorong",target:"caoyi",type:"industry-peer",label:"China early-stage VC, thesis-driven"},
+  {source:"gaorong",target:"chenwg",type:"coinvested",label:"Both backed embodied AI companies"},
 ];
 
 // ===================================================================
@@ -951,7 +971,7 @@ const orgColorMap = {
   "Source Code Capital":"var(--org-china-early)","BlueRun Ventures":"var(--org-china-early)","Future Capital":"var(--org-china-early)",
   "Inno Angel Fund":"var(--org-china-early)","Plum Ventures":"var(--org-china-early)","MiraclePlus":"var(--org-china-early)",
   "Xiaomi / Shunwei Capital":"var(--org-cvc)","Qualcomm Ventures":"var(--org-cvc)",
-  "XbotPark / Qingshuiwan Fund":"var(--org-angel)","HKUST / Brizan Ventures":"var(--org-angel)","AI Angel Investor":"var(--org-angel)",
+  "XbotPark / Qingshuiwan Fund":"var(--org-angel)","HKUST / Brizan Ventures":"var(--org-angel)","AI Angel Investor":"var(--org-angel)","ZhenFund":"var(--org-china-early)","Shunwei Capital":"var(--org-cvc)","Qiming Venture Partners":"var(--org-china-top)","Northern Light VC":"var(--org-china-top)","Lenovo Capital":"var(--org-cvc)","GL Ventures":"var(--org-china-early)",
   "Khosla Ventures":"var(--org-us-top)","a16z":"var(--org-us-top)","Founders Fund":"var(--org-us-top)","Lux Capital":"var(--org-us-top)",
   "Bezos Expeditions":"var(--org-corporate)","NVIDIA":"var(--org-corporate)","SoftBank Vision Fund":"var(--org-us-top)",
 };
@@ -961,7 +981,7 @@ const orgRawColors = {
   "Source Code Capital":"#30d158","BlueRun Ventures":"#30d158","Future Capital":"#30d158",
   "Inno Angel Fund":"#30d158","Plum Ventures":"#30d158","MiraclePlus":"#30d158",
   "Xiaomi / Shunwei Capital":"#ff9f0a","Qualcomm Ventures":"#ff9f0a",
-  "XbotPark / Qingshuiwan Fund":"#ffd60a","HKUST / Brizan Ventures":"#ffd60a","AI Angel Investor":"#ffd60a",
+  "XbotPark / Qingshuiwan Fund":"#ffd60a","HKUST / Brizan Ventures":"#ffd60a","AI Angel Investor":"#ffd60a","ZhenFund":"#30d158","Shunwei Capital":"#ff9f0a","Qiming Venture Partners":"#64d2ff","Northern Light VC":"#64d2ff","Lenovo Capital":"#ff9f0a","GL Ventures":"#30d158",
   "Khosla Ventures":"#bf5af2","a16z":"#bf5af2","Founders Fund":"#bf5af2","Lux Capital":"#bf5af2",
   "Bezos Expeditions":"#ff6482","NVIDIA":"#ff6482","SoftBank Vision Fund":"#bf5af2",
 };
@@ -1217,6 +1237,13 @@ const scholarZh = {
   jeffbezos:{title:"亚马逊创始人 · 机器人超级天使",bio:"1994年创办亚马逊。通过Bezos Expeditions个人投资。领投：Figure AI $6.75亿轮（→$390亿估值）、Physical Intelligence $4亿A轮（$20亿）。全球最大的人形机器人个人支持者之一。身家$2000亿+。"},
   jensenhuang:{zhName:"黄仁勋",title:"NVIDIA创始人兼CEO · AI算力教父",bio:"1963年生于台湾，在俄勒冈长大。俄勒冈州立EE，斯坦福硕士。1993年联合创办NVIDIA。NVIDIA Ventures投资了几乎所有主要AI/机器人公司。市值$3万亿+。AI算力教父——每个机器人和AI模型都跑在他的GPU上。"},
   masason:{zhName:"孙正义",title:"软银创始人 · 千亿愿景基金",bio:"1957年生于日本（韩裔）。UC Berkeley经济学。1981年创办软银。愿景基金1号：$1000亿（2017，史上最大）。投资：ARM、波士顿动力、Cruise、Humane（$2.3亿）。大胆押注机器人和AI硬件。争议性的撒网式投资方法。"},
+  daiyusen:{zhName:"戴雨森",title:"真格基金管理合伙人 · 聚美联创",bio:"清华工业工程学士。斯坦福管理科学硕士（退学）。2009年与陈欧联合创办聚美优品任产品副总裁，2014年纽交所IPO。2017年加入真格基金任管理合伙人。投资：月之暗面/Kimi（杨植麟）、观夏、Party Animals、东方空间。福布斯中国创投人100（2024）。聚焦AI应用、消费、深科技。以深度AI研究和年轻创始人网络著称。"},
+  liuyuan:{zhName:"刘元",title:"真格基金合伙人 · AI与硬件",bio:"真格基金合伙人。活跃于AI和硬件投资。曾评价Manus创始人肖弘为非名门出身但凭韧性成功的创业者典型。真格新一代合伙人，聚焦AI原生产品和硬件创新。"},
+  xudl:{zhName:"许达来",title:"顺为资本联合创始人兼CEO · 雷军投资臂膀",bio:"与雷军联合创办顺为资本（2011）。管理超$30亿（美元+人民币）。聚焦：移动互联网、深科技、AI、机器人。投资：宇树科技（多轮）、千寻智能（PreA+追加）、首形科技（领投），形成机器人本体+具身智能+情感交互三角闭环。与小米生态深度协同。"},
+  kuangzp:{zhName:"邝子平",title:"启明创投创始主管合伙人 · 斯坦福/伯克利",bio:"广州人。UCSF CS学士，斯坦福CS硕士，UC Berkeley MBA。2006年创办启明创投。投资580+家公司，210+家IPO/退出。管理$95亿。2025聚焦：AI为核心投资方向。投资：银河通用等多家机器人/AI公司。中国最有经验的VC领袖之一。"},
+  dengfeng:{zhName:"邓锋",title:"北极光创投创始人 · NetScreen联创",bio:"在硅谷联合创办NetScreen Technologies（2004年被Juniper $40亿收购）。2005年创办北极光创投。中国最受尊敬的深科技VC之一。聚焦：企业科技、半导体、AI、先进制造。连接硅谷和中国科技。"},
+  hezhiqiang:{zhName:"贺志强",title:"联想创投总裁 · 联想科技VC",bio:"联想创投总裁。联想集团CVC臂膀。聚焦：AI、机器人、IoT、智能设备、企业科技。投资多家具身智能和硬件创业公司。独特优势：可为被投企业提供联想全球供应链和市场资源。"},
+  gaorong:{zhName:"高榕团队",title:"高榕创投 · 具身智能支持者",bio:"高榕创投是中国领先的早期VC。活跃于具身智能：投资星海图等多家机器人公司。以论文驱动、集中下注品类定义者著称。2025-2026机器人浪潮中的顶级VC之一。"},
   natfriedman:{title:"前GitHub CEO · 硬件天使",bio:"前GitHub CEO（2018-2021，微软$75亿收购）。活跃的AI和硬件天使投资人。联合领投：The Bot Company $1.5亿种子（与Kyle Vogt）。也投资：Figure AI。代表科技高管转型硬件投资人的新浪潮。"},
 };
 
@@ -1257,6 +1284,19 @@ const connLabelZh = {
   "Global VC titans, both Forbes Midas":"全球VC巨头，均上福布斯榜",
   "Mega-fund investors, both Asia-focused":"超大基金，均聚焦亚洲",
   "China VC next-generation leaders":"中国VC新一代领袖",
+  "ZhenFund managing partners":"真格基金管理合伙人",
+  "Both bold early AI/consumer bets":"均以大胆AI/消费押注著称",
+  "Young China VC leaders":"中国VC年轻领袖",
+  "Co-founded Shunwei Capital together":"共同创办顺为资本",
+  "Both invested Unitree/robot ecosystem":"均投资宇树/机器人生态",
+  "China top VC founding generation":"中国顶级VC创始一代",
+  "Both invested Galbot embodied AI":"均投资银河通用具身智能",
+  "China deep tech VC founders":"中国深科技VC创始人",
+  "Both deep tech / hardware focused":"均聚焦深科技/硬件",
+  "CVC peers (Lenovo vs Xiaomi/Shunwei)":"CVC同行（联想 vs 小米/顺为）",
+  "CVC peers (Lenovo vs Qualcomm)":"CVC同行（联想 vs 高通）",
+  "China early-stage VC, thesis-driven":"中国早期VC，论文驱动",
+  "Both backed embodied AI companies":"均支持具身智能公司",
 };
 
 function applyLanguage(lang) {
@@ -1451,6 +1491,13 @@ function openDetail(d) {
     jensenhuang: ["GPU ecosystem", "AI compute", "Corporate VC", "Platform"],
     masason: ["Mega fund", "Vision", "Bold bets", "Asia focus"],
     natfriedman: ["Angel", "AI native", "Ex-operator", "Household robot"],
+    daiyusen: ["Early-stage", "AI apps", "Consumer", "Young founders", "Deep thesis"],
+    liuyuan: ["Early-stage", "AI native", "Hardware", "Unconventional founders"],
+    xudl: ["Ecosystem", "Lei Jun ally", "Robotics", "Deep tech", "$3B AUM"],
+    kuangzp: ["Full-stack", "580+ companies", "AI", "Healthcare", "$9.5B AUM"],
+    dengfeng: ["Deep tech", "Semiconductor", "Enterprise", "Silicon Valley bridge"],
+    hezhiqiang: ["CVC", "Supply chain", "IoT", "Robotics", "Lenovo resources"],
+    gaorong: ["Early-stage", "Thesis-driven", "Embodied AI", "Concentrated bets"],
   };
   const tagsEl = document.getElementById("detail-tags");
   const tags = investorTags[d.id] || [];
@@ -1548,6 +1595,8 @@ const cityMap = {
   leijun:"beijing",shenjin:"usa",lizexiang2:"hongkong",gaobq2:"hongkong",luqi2:"beijing",
   vinodkhosla:"usa",marca16z:"usa",peterthiel:"usa",joshwolfe:"usa",
   jeffbezos:"usa",jensenhuang:"usa",masason:"tokyo",natfriedman:"usa",
+  daiyusen:"beijing",liuyuan:"beijing",xudl:"beijing",kuangzp:"shanghai",
+  dengfeng:"beijing",hezhiqiang:"beijing",gaorong:"beijing",
 };
 
 // Simplified China map city positions (x,y in 200x160 viewBox)
