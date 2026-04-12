@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Investor Graph</title>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="PLACEHOLDER_UMAMI_ID"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+/* ===== Apple Design System Foundation ===== */
+@font-face {
+  font-family: 'SF Pro Display';
+  src: local('SF Pro Display'), local('.SFNSDisplay'), local('SFProDisplay-Regular'),
+       local('Helvetica Neue'), local('Helvetica');
+  font-weight: 100 900;
+}
+@font-face {
+  font-family: 'SF Pro Text';
+  src: local('SF Pro Text'), local('.SFNSText'), local('SFProText-Regular'),
+       local('Helvetica Neue'), local('Helvetica');
+  font-weight: 100 900;
+}
+
+:root {
+  /* Apple Colors */
+  --apple-black: #000000;
+  --apple-white: #ffffff;
+  --apple-gray-bg: #f5f5f7;
+  --apple-near-black: #1d1d1f;
+  --apple-blue: #0071e3;
+  --apple-link-blue: #0066cc;
+  --apple-link-blue-dark: #2997ff;
+  --apple-text-secondary: rgba(255, 255, 255, 0.56);
+  --apple-text-tertiary: rgba(255, 255, 255, 0.32);
+  --apple-surface-dark-1: #161617;
+  --apple-surface-dark-2: #1c1c1e;
+  --apple-surface-dark-3: #2c2c2e;
+
+  /* Organization Colors — desaturated, Apple-refined */
+  --org-china-top: #64d2ff;
+  --org-china-early: #30d158;
+  --org-corporate: #ff6482;
+  --org-us-other: #5e9eff;
+  --org-cvc: #ff9f0a;
+  --org-us-top: #bf5af2;
+  --org-angel: #ffd60a;
+  --org-independent: #98989d;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--apple-black);
+  color: var(--apple-white);
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Navigation — Apple Glass ===== */
+#nav-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 48px;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 1000;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+}
+.nav-title {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.374px;
+  color: var(--apple-white);
+  white-space: nowrap;
+}
+.nav-separator {
+  width: 0.5px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.16);
+  margin: 0 16px;
+}
+.nav-stats {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -0.12px;
+  color: var(--apple-text-secondary);
+}
+
+/* Search — Apple Style */
+.nav-search-wrapper {
+  margin-left: 24px;
+  position: relative;
+}
+#search-input {
+  width: 220px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 8px;
+  color: var(--apple-white);
+  padding: 0 12px 0 32px;
+  font-family: 'SF Pro Text', -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.224px;
+  outline: none;
+  transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+#search-input::placeholder {
+  color: rgba(255, 255, 255, 0.32);
+}
+#search-input:focus {
+  width: 280px;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 2px var(--apple-blue);
+}
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.32);
+  font-size: 13px;
+  pointer-events: none;
+}
+
+/* Filter Pills — Apple Pill CTA */
+.filter-group {
+  display: flex;
+  gap: 6px;
+  margin-left: 20px;
+}
+.filter-pill {
+  padding: 5px 14px;
+  border-radius: 980px;
+  font-family: 'SF Pro Text', -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -0.12px;
+  line-height: 1.33;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.56);
+  transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+  white-space: nowrap;
+}
+.filter-pill:hover {
+  border-color: rgba(255, 255, 255, 0.32);
+  color: rgba(255, 255, 255, 0.8);
+}
+.filter-pill.active {
+  background: var(--apple-blue);
+  border-color: var(--apple-blue);
+  color: var(--apple-white);
+}
+.nav-spacer { flex: 1; }
+
+/* Language Toggle — Apple Segmented Control */
+.lang-toggle {
+  display: flex;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 2px;
+  gap: 0;
+  margin-left: 12px;
+}
+.lang-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-family: 'SF Pro Text', -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.12px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+  white-space: nowrap;
+}
+.lang-btn:hover {
+  color: rgba(255, 255, 255, 0.64);
+}
+.lang-btn.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--apple-white);
+}
+
+/* ===== Graph Canvas ===== */
+#graph-container {
+  position: fixed;
+  top: 48px; left: 0; right: 0; bottom: 0;
+}
+#graph-container svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ===== Legend — Bottom Left ===== */
+#legend {
+  position: fixed;
+  bottom: 44px;
+  left: 24px;
+  z-index: 100;
+  pointer-events: all;
+}
+.legend-card {
+  background: rgba(28, 28, 30, 0.88);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-radius: 12px;
+  padding: 16px 20px;
+  min-width: 160px;
+}
+.legend-heading {
+  font-family: 'SF Pro Text', -apple-system, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--apple-text-tertiary);
+  margin-bottom: 10px;
+}
+.legend-heading:not(:first-child) { margin-top: 14px; }
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+  cursor: default;
+}
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.legend-line-sample {
+  width: 16px;
+  height: 0;
+  flex-shrink: 0;
+}
+.legend-label {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -0.12px;
+  color: rgba(255, 255, 255, 0.56);
+}
+
+/* ===== Detail Panel — Apple Sidebar ===== */
+#detail-panel {
+  position: fixed;
+  top: 48px;
+  right: 0;
+  width: 380px;
+  height: calc(100vh - 48px);
+  background: var(--apple-surface-dark-1);
+  border-left: 0.5px solid rgba(255, 255, 255, 0.08);
+  z-index: 500;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+#detail-panel.open {
+  transform: translateX(0);
+}
+#detail-panel::-webkit-scrollbar { width: 0; }
+
+.detail-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  z-index: 1;
+}
+.detail-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.detail-header {
+  padding: 40px 24px 20px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.detail-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+}
+.detail-avatar.loading {
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 100%);
+  background-size: 200% 200%;
+  animation: shimmer 1.5s ease infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+.detail-avatar-placeholder {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.2);
+  font-family: 'SF Pro Display', -apple-system, sans-serif;
+}
+.detail-header-info {
+  flex: 1;
+  min-width: 0;
+}
+.detail-name {
+  font-family: 'SF Pro Display', -apple-system, sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0.196px;
+  line-height: 1.14;
+  color: var(--apple-white);
+  margin-bottom: 6px;
+}
+.detail-title {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.224px;
+  line-height: 1.43;
+  color: var(--apple-text-secondary);
+}
+.detail-org-badge {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 4px 12px;
+  border-radius: 980px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.12px;
+}
+
+.detail-section {
+  padding: 20px 24px;
+  border-top: 0.5px solid rgba(255, 255, 255, 0.06);
+}
+.detail-section-title {
+  font-family: 'SF Pro Text', -apple-system, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--apple-text-tertiary);
+  margin-bottom: 12px;
+}
+.detail-section p {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.224px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Paper items */
+.paper-entry {
+  padding: 8px 0;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+.paper-year {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.12px;
+  color: var(--apple-link-blue-dark);
+  flex-shrink: 0;
+  min-width: 36px;
+}
+.paper-title {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: -0.12px;
+  line-height: 1.38;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+/* Connection items */
+.conn-entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  cursor: pointer;
+  border-radius: 8px;
+  margin: 0 -8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  transition: background 0.2s;
+}
+.conn-entry:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+.conn-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.conn-info {
+  flex: 1;
+  min-width: 0;
+}
+.conn-name {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.224px;
+  color: var(--apple-white);
+}
+.conn-relation {
+  font-size: 11px;
+  letter-spacing: -0.08px;
+  color: var(--apple-text-tertiary);
+  margin-top: 1px;
+}
+.conn-type-badge {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: -0.08px;
+  color: var(--apple-text-tertiary);
+  padding: 2px 8px;
+  border-radius: 980px;
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+/* ===== SVG Styles ===== */
+
+/* Links — 4 tiers of visual weight */
+.link-line {
+  transition: stroke-opacity 0.35s ease, stroke-width 0.35s ease;
+  stroke-linecap: round;
+}
+/* Cofounder: strongest bond, solid bright green */
+.link-line.type-cofounder {
+  stroke: #30d158;
+  stroke-width: 2.5;
+  stroke-opacity: 0.5;
+}
+/* Coauthor: strong academic tie, solid blue */
+.link-line.type-former-colleague {
+  stroke: #2997ff;
+  stroke-width: 1.8;
+  stroke-opacity: 0.35;
+}
+/* Advisor: mentor line, dashed cyan */
+.link-line.type-mentor {
+  stroke: #64d2ff;
+  stroke-width: 1.8;
+  stroke-opacity: 0.4;
+  stroke-dasharray: 8 5;
+}
+/* Colleague: weakest, subtle dotted */
+.link-line.type-industry-peer {
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-width: 0.8;
+  stroke-opacity: 0.15;
+  stroke-dasharray: 2 6;
+}
+
+.node-group {
+  transition: opacity 0.3s ease;
+}
+.node-glow {
+  transition: opacity 0.3s ease;
+}
+.node-label {
+  font-family: 'SF Pro Text', -apple-system, sans-serif;
+  font-weight: 500;
+  fill: rgba(255, 255, 255, 0.64);
+  text-anchor: middle;
+  pointer-events: none;
+  transition: fill 0.3s, font-size 0.3s;
+}
+
+/* Dim / Highlight states */
+.node-group.dimmed { opacity: 0.06; }
+.node-group.highlighted { opacity: 1; }
+.node-group.highlighted .node-label {
+  fill: var(--apple-white);
+  font-weight: 600;
+}
+.node-group.highlighted .node-glow { opacity: 0.5; }
+
+.link-line.dimmed { stroke-opacity: 0.015 !important; }
+.link-line.highlighted.type-cofounder { stroke-opacity: 0.85 !important; stroke-width: 3.5px !important; }
+.link-line.highlighted.type-former-colleague { stroke-opacity: 0.75 !important; stroke-width: 3px !important; }
+.link-line.highlighted.type-mentor { stroke-opacity: 0.7 !important; stroke-width: 2.5px !important; }
+.link-line.highlighted.type-industry-peer { stroke-opacity: 0.5 !important; stroke-width: 1.5px !important; stroke-dasharray: none !important; }
+
+/* ===== Tooltip ===== */
+#tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: rgba(28, 28, 30, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 8px;
+  padding: 8px 12px;
+  z-index: 2000;
+  opacity: 0;
+  transition: opacity 0.15s;
+  max-width: 240px;
+}
+#tooltip.visible { opacity: 1; }
+.tooltip-name {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.12px;
+  color: var(--apple-white);
+}
+.tooltip-org {
+  font-size: 11px;
+  letter-spacing: -0.08px;
+  color: var(--apple-text-secondary);
+  margin-top: 2px;
+}
+
+/* ===== Keyboard hint ===== */
+/* ===== Bottom Quick Links ===== */
+#quick-links {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 1000;
+  padding: 0 16px;
+}
+.quick-link {
+  font-family: 'SF Pro Text', -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -0.12px;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  padding: 4px 12px;
+  border-radius: 980px;
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+  white-space: nowrap;
+}
+.quick-link:hover {
+  color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.06);
+}
+.quick-link.active {
+  color: var(--apple-link-blue-dark);
+  border-color: rgba(41, 151, 255, 0.3);
+}
+.quick-link-sep {
+  color: rgba(255, 255, 255, 0.12);
+  font-size: 11px;
+}
+
+#keyboard-hint {
+  position: fixed;
+  bottom: 44px;
+  right: 24px;
+  z-index: 100;
+  display: flex;
+  gap: 12px;
+}
+.hint-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  letter-spacing: -0.08px;
+  color: var(--apple-text-tertiary);
+}
+.hint-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ===== Mobile Responsive ===== */
+/* ===== Mini Map — Bottom Right ===== */
+#geo-map {
+  position: fixed;
+  bottom: 44px;
+  right: 24px;
+  z-index: 100;
+  width: 220px;
+  pointer-events: none;
+}
+.geo-card {
+  background: rgba(28, 28, 30, 0.88);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-radius: 12px;
+  padding: 12px 14px 8px;
+}
+.geo-heading {
+  font-family: 'SF Pro Text', -apple-system, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--apple-text-tertiary);
+  margin-bottom: 8px;
+}
+.geo-svg { width: 100%; display: block; }
+.geo-bubble {
+  fill: var(--apple-blue);
+  fill-opacity: 0.5;
+  stroke: var(--apple-blue);
+  stroke-width: 1;
+  stroke-opacity: 0.8;
+}
+.geo-label {
+  font-family: 'SF Pro Text', -apple-system, sans-serif;
+  font-size: 8px;
+  fill: rgba(255, 255, 255, 0.6);
+  text-anchor: middle;
+  pointer-events: none;
+}
+.geo-count {
+  font-family: 'SF Pro Text', -apple-system, sans-serif;
+  font-size: 7px;
+  fill: rgba(255, 255, 255, 0.9);
+  text-anchor: middle;
+  font-weight: 600;
+  pointer-events: none;
+}
+.geo-outline {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 0.5;
+}
+
+@media (max-width: 768px) {
+  #nav-bar {
+    height: auto;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    gap: 6px;
+  }
+  .nav-title { font-size: 15px; }
+  .nav-separator { display: none; }
+  .nav-stats { font-size: 11px; order: 5; width: 100%; }
+  .nav-search-wrapper { margin-left: 0; flex: 1; min-width: 0; order: 3; }
+  #search-input { width: 100%; font-size: 13px; }
+  #search-input:focus { width: 100%; }
+  .filter-group {
+    order: 6;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+    margin-left: 0;
+  }
+  .filter-pill { font-size: 11px; padding: 4px 10px; flex-shrink: 0; }
+  .lang-toggle { order: 4; margin-left: auto; }
+  .nav-spacer { display: none; }
+  #graph-container { top: 90px; }
+  #legend { display: none; }
+  #geo-map { display: none; }
+  #detail-panel {
+    width: 100vw;
+    top: 0;
+    height: 100vh;
+    border-left: none;
+    z-index: 9999;
+  }
+  .detail-header { padding: 24px 16px 16px; }
+  .detail-avatar, .detail-avatar-placeholder { width: 56px; height: 56px; }
+  .detail-name { font-size: 22px; }
+  .detail-section { padding: 14px 16px; }
+  .detail-close {
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+  #keyboard-hint { display: none; }
+  #quick-links { height: 32px; gap: 4px; }
+  .quick-link { font-size: 10px; padding: 3px 8px; }
+  .quick-link-sep { font-size: 9px; }
+  .node-label { font-size: 9px !important; }
+}
+
+@media (max-width: 480px) {
+  #nav-bar { padding: 6px 8px; }
+  .nav-title { font-size: 13px; }
+  #search-input { height: 28px; font-size: 12px; }
+  .filter-pill { font-size: 10px; padding: 3px 8px; }
+  .detail-name { font-size: 20px; }
+  .detail-avatar, .detail-avatar-placeholder { width: 48px; height: 48px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Tooltip -->
+<div id="tooltip">
+  <div class="tooltip-name" id="tooltip-name"></div>
+  <div class="tooltip-org" id="tooltip-org"></div>
+</div>
+
+<!-- Navigation Bar — Apple Glass -->
+<nav id="nav-bar">
+  <span class="nav-title">Tech Investor Graph</span>
+  <span class="nav-separator"></span>
+  <span class="nav-stats" id="nav-stats"></span>
+
+  <div class="nav-search-wrapper">
+    <span class="search-icon">&#x2315;</span>
+    <input type="text" id="search-input" placeholder="Search scholars..." autocomplete="off" spellcheck="false">
+  </div>
+
+  <div class="filter-group">
+    <button class="filter-pill active" data-filter="all">All</button>
+    <button class="filter-pill" data-filter="china-vc">China VC</button>
+    <button class="filter-pill" data-filter="us-vc">US VC</button>
+    <button class="filter-pill" data-filter="early">Early Stage</button>
+    <button class="filter-pill" data-filter="cvc">CVC</button>
+    <button class="filter-pill" data-filter="angel">Angel</button>
+  </div>
+
+  <div class="nav-spacer"></div>
+
+  <div class="lang-toggle">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn active" data-lang="zh">中文</button>
+  </div>
+</nav>
+
+<!-- Legend -->
+<div id="legend">
+  <div class="legend-card">
+    <div class="legend-heading">Organizations</div>
+    <div class="legend-row"><div class="legend-dot" style="background:var(--org-dji)"></div><span class="legend-label">China Top VC</span></div>
+    <div class="legend-row"><div class="legend-dot" style="background:var(--org-xiaomi)"></div><span class="legend-label">China CVC</span></div>
+    <div class="legend-row"><div class="legend-dot" style="background:var(--org-huawei)"></div><span class="legend-label">Corporate</span></div>
+    <div class="legend-row"><div class="legend-dot" style="background:var(--org-robotics)"></div><span class="legend-label">China Early VC</span></div>
+    <div class="legend-row"><div class="legend-dot" style="background:var(--org-consumer)"></div><span class="legend-label">Angel / Professor</span></div>
+    <div class="legend-row"><div class="legend-dot" style="background:var(--org-arvr)"></div><span class="legend-label">US Other VC</span></div>
+    <div class="legend-row"><div class="legend-dot" style="background:var(--org-overseas)"></div><span class="legend-label">US Top VC</span></div>
+    <div class="legend-heading">Connections</div>
+    <div class="legend-row"><div class="legend-line-sample" style="border-top:2.5px solid #30d158; opacity:0.7"></div><span class="legend-label">Co-invested</span></div>
+    <div class="legend-row"><div class="legend-line-sample" style="border-top:2px solid #2997ff; opacity:0.6"></div><span class="legend-label">Co-invested</span></div>
+    <div class="legend-row"><div class="legend-line-sample" style="border-top:2px dashed #64d2ff; opacity:0.6"></div><span class="legend-label">Mentor/LP</span></div>
+    <div class="legend-row"><div class="legend-line-sample" style="border-top:1px dotted rgba(255,255,255,0.5); opacity:0.5"></div><span class="legend-label">Industry Peers</span></div>
+  </div>
+</div>
+
+<!-- Detail Panel -->
+<div id="detail-panel">
+  <button class="detail-close" id="detail-close">&#10005;</button>
+  <div class="detail-header">
+    <div class="detail-avatar-placeholder" id="detail-avatar"><span id="detail-avatar-initial"></span></div>
+    <div class="detail-header-info">
+      <div class="detail-name" id="detail-name"></div>
+      <div class="detail-title" id="detail-title"></div>
+      <div class="detail-org-badge" id="detail-org"></div>
+    </div>
+  </div>
+  <div class="detail-section">
+    <div class="detail-section-title">About</div>
+    <p id="detail-bio"></p>
+  </div>
+  <div class="detail-section" id="detail-papers-section">
+    <div class="detail-section-title">Key Contributions</div>
+    <div id="detail-papers"></div>
+  </div>
+  <div class="detail-section">
+    <div class="detail-section-title">Connections</div>
+    <div id="detail-connections"></div>
+  </div>
+</div>
+
+<!-- Keyboard Hints -->
+
+<!-- Geo Map -->
+<div id="geo-map">
+  <div class="geo-card">
+    <div class="geo-heading" id="geo-heading">Location Distribution</div>
+    <svg class="geo-svg" id="geo-svg" viewBox="0 0 200 160"></svg>
+  </div>
+</div>
+
+<!-- Quick Links -->
+<div id="quick-links">
+  <a class="quick-link" href="https://jason3535.github.io/ai-scholar-graph/">AI Scholar Graph</a>
+  <span class="quick-link-sep">&middot;</span>
+  <a class="quick-link" href="https://jason3535.github.io/hardware-startup-graph/">Hardware Startup Graph</a>
+  <span class="quick-link-sep">&middot;</span>
+  <a class="quick-link active" href="https://jason3535.github.io/investor-graph/">Investor Graph</a>
+  <span class="quick-link-sep">&middot;</span>
+  <a class="quick-link" href="https://jasonlin.tech">jasonlin.tech</a>
+</div>
+
+<!-- Graph -->
+<div id="graph-container">
+  <svg id="main-svg"></svg>
+</div>
+
+<script>
+// ===================================================================
+// DATA
+// ===================================================================
+const scholars = [
+  {id:"shennp",name:"Shen Nanpeng",org:"HongShan (Sequoia China)",title:"Founding Partner · Forbes Midas #1",field:["china-vc"],bio:"Born 1967 Shanghai. SJTU math, Columbia MBA, Yale MBA. Deutsche Bank analyst. Co-founded Ctrip 1999, Home Inns 2002. Founded Sequoia China 2005, rebranded HongShan 2023. Forbes Midas List #1 multiple times. AUM: $56B. Invested: DJI, ByteDance, Meituan, Pinduoduo, Shein, Alibaba. China's most successful VC ever.",papers:[{y:"2005",t:"Founded Sequoia China"},{y:"2018",t:"Forbes Midas #1"},{y:"2023",t:"Rebranded as HongShan, AUM $56B"}]},
+  {id:"zhanglei",name:"Zhang Lei",org:"Hillhouse Capital",title:"Founder · Yale Endowment Protege",field:["china-vc"],bio:"Born 1972 Zhumadian Henan. Renmin Univ, Yale MBA (David Swensen mentee). Founded Hillhouse 2005 with $20M from Yale endowment. AUM: $60B+. Invested: Tencent, JD.com ($2.55B single check), Zoom, Roborock, EcoFlow, TENWAYS (21%), Haivivi, Baidu. Philosophy: value investing in change. Backed almost every major hardware unicorn.",papers:[{y:"2005",t:"Founded Hillhouse with $20M Yale money"},{y:"2014",t:"$2.55B JD.com investment"},{y:"2025",t:"AUM $60B+, hardware bets pay off"}]},
+  {id:"xiongxg",name:"Xiong Xiaoge",org:"IDG Capital",title:"Godfather of Chinese VC · Brought VC to China",field:["china-vc"],bio:"Born 1956 Hunan. Hunan Univ, Boston Univ. Brought VC to China in 1993 as IDG first China partner. Invested: Baidu (pre-IPO), Tencent, Insta360 (angel $1M to Liu Jingkang), Xiaomi. Known as Godfather of Chinese VC. Passed away 2023. IDG Capital AUM: $25B+.",papers:[{y:"1993",t:"Brought VC to China — IDG first fund"},{y:"2000",t:"Invested Baidu pre-IPO"},{y:"2014",t:"IDG angel $1M in Insta360"}]},
+  {id:"zhangying",name:"Zhang Ying",org:"Matrix Partners China",title:"Founding Partner · Blunt-speaking VC",field:["china-vc"],bio:"Born 1973. China Telecom engineer before VC. Founded Matrix Partners China (Jingwei) 2008. AUM: $7B+. Invested: VIPKID, Momenta, Ctrip (early), multiple AI/hardware. Known for extremely blunt speaking style and high-energy personality.",papers:[{y:"2008",t:"Founded Matrix Partners China"},{y:"2024",t:"Active in AI hardware investments"}]},
+  {id:"zhuxiaohu",name:"Zhu Xiaohu",org:"GSR Ventures",title:"Managing Director · Bold AI Hardware Bets",field:["china-vc","early"],bio:"Born 1969 Shanghai. SJTU, Kellogg MBA. GSR Ventures (Jinshajiang) Managing Director since 2007. Invested: Didi (led Series A, greatest return), Ofo, Robopoet/Fuzozo (decided in <10 min), PLAUD ($1B valuation). Known for bold bets and controversial opinions. Recently all-in on AI hardware and AI toys.",papers:[{y:"2012",t:"Led Didi Series A"},{y:"2025",t:"Invested Fuzozo in 10 min conversation"},{y:"2025",t:"Called AI toys boldest bet of year"}]},
+  {id:"caoyi",name:"Cao Yi",org:"Source Code Capital",title:"Founder · Youngest Top VC Founder",field:["china-vc","early"],bio:"Born 1987. Founded Source Code Capital (Yuanma) 2014 at age 27, youngest top VC founder in China. AUM: $5B+. Invested: ByteDance (early), Meituan, OneRobotics/Woan (multiple rounds), PDD. Philosophy: code is the new infrastructure.",papers:[{y:"2014",t:"Founded Source Code at 27"},{y:"2020",t:"Invested OneRobotics early rounds"}]},
+  {id:"chenwg",name:"Chen Weiguang",org:"BlueRun Ventures",title:"Managing Partner · Embodied AI King",field:["china-vc","early"],bio:"Managing Partner of BlueRun Ventures China (Lanchi). One of the most active embodied AI investors in China. Invested: Agibot/Zhiyuan (multiple rounds), LimX Dynamics, Unitree early, TaShi ZhiHang. Partner Cao Wei specifically leads robot investments. Deep conviction in humanoid robotics.",papers:[{y:"2023",t:"Multiple Agibot rounds"},{y:"2025",t:"TaShi ZhiHang angel $122M record"}]},
+  {id:"huangmm",name:"Huang Mingming",org:"Future Capital",title:"Founder · The VC Who Understands Hardware Best",field:["china-vc","early"],bio:"Born 1976. Peking Univ. Founded Future Capital (Mingshi) 2014. Known as the VC who understands hardware best in China. Invested: Li Auto (first institutional investor), XAG (Jifei). Deep focus on smart manufacturing, robotics, NEV, embodied intelligence.",papers:[{y:"2015",t:"First investor in Li Auto"},{y:"2020",t:"Led XAG rounds"}]},
+  {id:"lizhu",name:"Li Zhu",org:"Inno Angel Fund",title:"Founder · 500+ Angel Investments",field:["china-vc","early","angel"],bio:"Founded Inno Angel Fund (Yingnuo) 2013. One of China's most active angel investors with 500+ early-stage investments. Focus: AI, robotics, smart hardware. Known for high-volume, thesis-driven angel investing across the Beijing tech ecosystem.",papers:[{y:"2013",t:"Founded Inno Angel"},{y:"2025",t:"500+ portfolio companies"}]},
+  {id:"wushichun",name:"Wu Shichun",org:"Plum Ventures",title:"Founder · Invest in the Chinese Dream",field:["china-vc","early","angel"],bio:"Born 1975 Hunan. Founded Plum Ventures (Meihua) 2014. Invested: Unitree (early angel), multiple robot companies, consumer hardware. Philosophy: invest in the Chinese dream. Active on social media sharing investment theses.",papers:[{y:"2014",t:"Founded Plum Ventures"},{y:"2020",t:"Early Unitree angel investment"}]},
+  {id:"liuqin",name:"Liu Qin",org:"5Y Capital",title:"Founding Partner · Xiaomi's $500K→$5B Return",field:["china-vc"],bio:"Co-founded 5Y Capital (Wuyuan, formerly Morningside Ventures) with Richard Liu. Achieved one of the greatest returns in Chinese VC: $500K into Xiaomi early → $5B+ return. Also invested: Kuaishou, XPeng. Known for extreme patience and conviction investing.",papers:[{y:"2010",t:"$500K into Xiaomi → $5B return"},{y:"2017",t:"Kuaishou early investment"}]},
+  {id:"leijun",name:"Lei Jun",org:"Xiaomi / Shunwei Capital",title:"Xiaomi Founder · Hardware Ecosystem Creator",field:["cvc","china-vc"],bio:"Born 1969 Hubei. Wuhan Univ CS. Kingsoft CEO → UCWeb → Xiaomi 2010 → Shunwei Capital 2011. Created the Xiaomi ecosystem model: invested in Dreame, Roborock, Narwal, Ninebot, Aqara, Loona/KEYi, hundreds more. Spawned massive hardware entrepreneurship wave. Net worth: ~$25B. Xiaomi market cap: $100B+.",papers:[{y:"2010",t:"Founded Xiaomi"},{y:"2011",t:"Founded Shunwei Capital"},{y:"2025",t:"Xiaomi ecosystem 400+ companies"}]},
+  {id:"shenjin",name:"Shen Jin",org:"Qualcomm Ventures",title:"SVP Qualcomm · China Tech Bridge",field:["cvc"],bio:"SVP of Qualcomm, President of Qualcomm Ventures. One of the earliest and most active corporate VCs bridging US chips and China hardware. Invested: Xiaomi (early), numerous Chinese AI/robotics companies. Deep connector between Silicon Valley semiconductor industry and Shenzhen hardware ecosystem.",papers:[{y:"2011",t:"Qualcomm Ventures invested Xiaomi early"},{y:"2025",t:"Active in China AI/robotics"}]},
+  {id:"lizexiang2",name:"Li Zexiang",org:"XbotPark / Qingshuiwan Fund",title:"HKUST Professor · Hardware Startup Godfather",field:["angel"],bio:"HKUST professor. THE most important single investor in Chinese hardware. Created XbotPark (Songshan Lake Robot Base), incubated 60+ companies. Invested via Qingshuiwan Fund: DJI, Narwal, LiberLive, ePropulsion, OneRobotics, Hai Robotics, RingConn, Laimu. With Gao Bingqiang and Gan Jie, forms the HKUST professor investment trio.",papers:[{y:"2006",t:"Mentored DJI founding"},{y:"2015",t:"XbotPark incubated 60+ companies"},{y:"2025",t:"Still actively investing seed rounds"}]},
+  {id:"gaobq2",name:"Gao Bingqiang",org:"HKUST / Brizan Ventures",title:"HKUST Professor · Hardware Angel Legend",field:["angel"],bio:"HKUST professor. Angel investor alongside Li Zexiang. Notable: invested $1M in Haivivi/Yueran saving it from bankruptcy in 2023. Invested RingConn via Brizan Ventures II and Future Tech Fund. Part of HKUST professor trio that forms backbone of XbotPark investment network.",papers:[{y:"2023",t:"$1M angel saved Haivivi from bankruptcy"},{y:"2024",t:"Invested RingConn"}]},
+  {id:"luqi2",name:"Lu Qi",org:"MiraclePlus",title:"Founder · Silicon Valley-China Bridge",field:["china-vc","early"],bio:"CMU PhD CS. IBM Research → Yahoo VP → Microsoft EVP → Baidu COO (Robin Li recruited) → YC China (Sam Altman recruited) → MiraclePlus. Backed 340+ companies. The ultimate bridge between Silicon Valley and Chinese tech. One of highest-ranking Chinese executives in US tech history.",papers:[{y:"2018",t:"Led Y Combinator China"},{y:"2020",t:"Founded MiraclePlus, 340+ companies"}]},
+  {id:"vinodkhosla",name:"Vinod Khosla",org:"Khosla Ventures",title:"Founder · Sun Microsystems Co-founder",field:["us-vc"],bio:"Born 1955 India. IIT Delhi EE, Carnegie Mellon biomedical, Stanford MBA. Co-founded Sun Microsystems 1982. Founded Khosla Ventures 2004. Invested: Rabbit R1 ($30M), Figure AI, Field AI ($314M Series A for farm robots). Deep tech and breakthrough hardware focus. Net worth: $7.8B.",papers:[{y:"1982",t:"Co-founded Sun Microsystems"},{y:"2024",t:"Invested Rabbit R1 $30M, Figure AI"}]},
+  {id:"marca16z",name:"Marc Andreessen",org:"a16z",title:"Co-founder of a16z · Invented the Web Browser",field:["us-vc"],bio:"Born 1971 Iowa. UIUC CS. Created Mosaic (first web browser), co-founded Netscape (IPO 1995). Co-founded a16z 2009 with Ben Horowitz. AUM: $42B+, $90B total assets. Invested: Figure AI, Anduril. Raised $15B new funds Jan 2026. Massive AI hardware and robotics bets.",papers:[{y:"1994",t:"Created Mosaic/Netscape"},{y:"2009",t:"Co-founded a16z"},{y:"2026",t:"Raised $15B, $90B total assets"}]},
+  {id:"peterthiel",name:"Peter Thiel",org:"Founders Fund",title:"Co-founder PayPal · Contrarian Investor",field:["us-vc"],bio:"Born 1967 Germany, grew up US. Stanford Philosophy + Law. Co-founded PayPal (mafia), Palantir. Founders Fund: invested SpaceX, Anduril, Stripe. Thiel Fellowship funded Chris Olah and many hardware/AI entrepreneurs ($100K to skip college). Philosophy: going from 0 to 1.",papers:[{y:"1998",t:"Co-founded PayPal"},{y:"2005",t:"Founded Founders Fund + Thiel Fellowship"}]},
+  {id:"joshwolfe",name:"Josh Wolfe",org:"Lux Capital",title:"Co-founder · Deep Tech Specialist",field:["us-vc"],bio:"Co-founded Lux Capital 2000. Specialist in deep tech, defense tech, frontier hardware. Led: Anduril $1.5B round, invested Physical Intelligence, numerous robotics/materials/biotech startups. Philosophy: invest in the future, embrace sci-fi becoming reality.",papers:[{y:"2000",t:"Co-founded Lux Capital"},{y:"2024",t:"Led Anduril $1.5B round"}]},
+  {id:"jeffbezos",name:"Jeff Bezos",org:"Bezos Expeditions",title:"Amazon Founder · Robotics Super-Angel",field:["corporate","us-vc"],bio:"Founded Amazon 1994. Personal investments via Bezos Expeditions. Led: Figure AI $675M round (→$39B valuation), Physical Intelligence $400M Series A ($2B). One of biggest individual backers of humanoid robotics globally. Net worth: $200B+.",papers:[{y:"2024",t:"Led Figure AI $675M round"},{y:"2024",t:"Led Physical Intelligence $400M"}]},
+  {id:"jensenhuang",name:"Jensen Huang",org:"NVIDIA",title:"NVIDIA Founder & CEO · AI Compute Godfather",field:["corporate"],bio:"Born 1963 Taiwan, grew up Oregon. Oregon State EE, Stanford MS. Co-founded NVIDIA 1993. NVIDIA Ventures invested in almost every major AI/robotics company. Market cap: $3T+. The godfather of AI compute — every robot and AI model runs on his GPUs.",papers:[{y:"1993",t:"Co-founded NVIDIA"},{y:"2024",t:"NVIDIA $3T+, invested Figure/Physical Intelligence"}]},
+  {id:"masason",name:"Masayoshi Son",org:"SoftBank Vision Fund",title:"SoftBank Founder · $100B Vision Fund",field:["us-vc","corporate"],bio:"Born 1957 Japan (Korean descent). UC Berkeley Economics. Founded SoftBank 1981. Vision Fund 1: $100B (2017, largest ever). Invested: ARM, Boston Dynamics, Cruise, Humane ($230M). Bold bets on robotics and AI hardware. Controversial spray and pray approach.",papers:[{y:"2017",t:"$100B Vision Fund 1"},{y:"2023",t:"Invested Humane $230M"}]},
+  {id:"natfriedman",name:"Nat Friedman",org:"AI Angel Investor",title:"Former GitHub CEO · Hardware Angel",field:["angel","us-vc"],bio:"Former GitHub CEO (2018-2021, acquired by Microsoft for $7.5B). Active angel investor in AI and hardware. Co-led: The Bot Company $150M seed with Kyle Vogt. Also invested: Figure AI, multiple AI startups. Represents the new wave of tech-executive-turned-hardware-investor.",papers:[{y:"2024",t:"Co-led Bot Company $150M"},{y:"2025",t:"Active AI hardware angel"}]},
+];
+
+const connections = [
+  {source:"shennp",target:"zhanglei",type:"coinvested",label:"Co-invested in DJI, overlapping hardware portfolios"},
+  {source:"shennp",target:"xiongxg",type:"industry-peer",label:"China VC pioneers, both invested Baidu era"},
+  {source:"shennp",target:"leijun",type:"coinvested",label:"Both invested Xiaomi ecosystem companies"},
+  {source:"zhanglei",target:"leijun",type:"coinvested",label:"Hillhouse invested Roborock, TENWAYS (Xiaomi ecosystem)"},
+  {source:"zhanglei",target:"gaobq2",type:"coinvested",label:"Both invested in Haivivi/hardware startups"},
+  {source:"xiongxg",target:"zhuxiaohu",type:"industry-peer",label:"Shanghai VC pioneers"},
+  {source:"zhuxiaohu",target:"gaobq2",type:"coinvested",label:"Both invested Robopoet/Fuzozo"},
+  {source:"zhuxiaohu",target:"caoyi",type:"industry-peer",label:"China early-stage VC leaders"},
+  {source:"caoyi",target:"chenwg",type:"industry-peer",label:"Both active in embodied AI investment"},
+  {source:"chenwg",target:"huangmm",type:"industry-peer",label:"Both focused on hardware + robotics"},
+  {source:"chenwg",target:"wushichun",type:"coinvested",label:"Both early Unitree investors"},
+  {source:"huangmm",target:"leijun",type:"industry-peer",label:"Both invested NEV + hardware ecosystem"},
+  {source:"lizhu",target:"wushichun",type:"industry-peer",label:"China angel investor peers"},
+  {source:"liuqin",target:"leijun",type:"coinvested",label:"5Y invested Xiaomi $500K → $5B return"},
+  {source:"leijun",target:"lizexiang2",type:"coinvested",label:"Xiaomi ecosystem + XbotPark overlap"},
+  {source:"leijun",target:"shenjin",type:"coinvested",label:"Qualcomm Ventures early Xiaomi investor"},
+  {source:"lizexiang2",target:"gaobq2",type:"mentor",label:"HKUST professor trio, XbotPark co-investment"},
+  {source:"lizexiang2",target:"chenwg",type:"coinvested",label:"Both invested Agibot ecosystem"},
+  {source:"luqi2",target:"zhuxiaohu",type:"industry-peer",label:"Both bold early-stage bet makers"},
+  {source:"luqi2",target:"shennp",type:"industry-peer",label:"China VC ecosystem leaders"},
+  {source:"vinodkhosla",target:"marca16z",type:"industry-peer",label:"Silicon Valley VC titans"},
+  {source:"vinodkhosla",target:"jeffbezos",type:"coinvested",label:"Both invested Figure AI"},
+  {source:"marca16z",target:"jeffbezos",type:"coinvested",label:"Both invested Figure AI, Anduril"},
+  {source:"marca16z",target:"peterthiel",type:"industry-peer",label:"Silicon Valley VC founding generation"},
+  {source:"marca16z",target:"joshwolfe",type:"coinvested",label:"Both invested deep tech / defense tech"},
+  {source:"peterthiel",target:"jeffbezos",type:"industry-peer",label:"Tech billionaire investors"},
+  {source:"joshwolfe",target:"jeffbezos",type:"coinvested",label:"Both invested Physical Intelligence"},
+  {source:"jensenhuang",target:"jeffbezos",type:"coinvested",label:"Both invested Figure AI via corporate"},
+  {source:"jensenhuang",target:"marca16z",type:"coinvested",label:"NVIDIA + a16z co-invested robotics"},
+  {source:"masason",target:"marca16z",type:"industry-peer",label:"Mega-fund VC peers"},
+  {source:"natfriedman",target:"jeffbezos",type:"coinvested",label:"Both backed Figure AI"},
+  {source:"natfriedman",target:"joshwolfe",type:"industry-peer",label:"US hardware angel investors"},
+  {source:"shennp",target:"vinodkhosla",type:"industry-peer",label:"Global VC titans, both Forbes Midas"},
+  {source:"zhanglei",target:"masason",type:"industry-peer",label:"Mega-fund investors, both Asia-focused"},
+  {source:"zhangying",target:"caoyi",type:"industry-peer",label:"China VC next-generation leaders"},
+];
+
+// ===================================================================
+// COLOR SYSTEM
+// ===================================================================
+const orgColorMap = {
+  "HongShan (Sequoia China)":"var(--org-china-top)","Hillhouse Capital":"var(--org-china-top)","IDG Capital":"var(--org-china-top)",
+  "Matrix Partners China":"var(--org-china-top)","GSR Ventures":"var(--org-china-top)","5Y Capital":"var(--org-china-top)",
+  "Source Code Capital":"var(--org-china-early)","BlueRun Ventures":"var(--org-china-early)","Future Capital":"var(--org-china-early)",
+  "Inno Angel Fund":"var(--org-china-early)","Plum Ventures":"var(--org-china-early)","MiraclePlus":"var(--org-china-early)",
+  "Xiaomi / Shunwei Capital":"var(--org-cvc)","Qualcomm Ventures":"var(--org-cvc)",
+  "XbotPark / Qingshuiwan Fund":"var(--org-angel)","HKUST / Brizan Ventures":"var(--org-angel)","AI Angel Investor":"var(--org-angel)",
+  "Khosla Ventures":"var(--org-us-top)","a16z":"var(--org-us-top)","Founders Fund":"var(--org-us-top)","Lux Capital":"var(--org-us-top)",
+  "Bezos Expeditions":"var(--org-corporate)","NVIDIA":"var(--org-corporate)","SoftBank Vision Fund":"var(--org-us-top)",
+};
+const orgRawColors = {
+  "HongShan (Sequoia China)":"#64d2ff","Hillhouse Capital":"#64d2ff","IDG Capital":"#64d2ff",
+  "Matrix Partners China":"#64d2ff","GSR Ventures":"#64d2ff","5Y Capital":"#64d2ff",
+  "Source Code Capital":"#30d158","BlueRun Ventures":"#30d158","Future Capital":"#30d158",
+  "Inno Angel Fund":"#30d158","Plum Ventures":"#30d158","MiraclePlus":"#30d158",
+  "Xiaomi / Shunwei Capital":"#ff9f0a","Qualcomm Ventures":"#ff9f0a",
+  "XbotPark / Qingshuiwan Fund":"#ffd60a","HKUST / Brizan Ventures":"#ffd60a","AI Angel Investor":"#ffd60a",
+  "Khosla Ventures":"#bf5af2","a16z":"#bf5af2","Founders Fund":"#bf5af2","Lux Capital":"#bf5af2",
+  "Bezos Expeditions":"#ff6482","NVIDIA":"#ff6482","SoftBank Vision Fund":"#bf5af2",
+};
+const linkColorMap = {coinvested:"#2997ff",mentor:"#64d2ff","industry-peer":"rgba(255,255,255,0.5)","former-colleague":"#30d158"};
+
+function getColor(org) { return orgRawColors[org] || "#98989d"; }
+
+// ===================================================================
+// D3 GRAPH
+// ===================================================================
+const W = window.innerWidth;
+const H = window.innerHeight - 48;
+
+const svg = d3.select("#main-svg");
+const g = svg.append("g");
+
+// Zoom
+const zoomBehavior = d3.zoom().scaleExtent([0.15, 5])
+  .on("zoom", ({transform}) => g.attr("transform", transform));
+svg.call(zoomBehavior);
+
+// Glow filter
+const defs = svg.append("defs");
+const glowFilter = defs.append("filter").attr("id","glow").attr("x","-50%").attr("y","-50%").attr("width","200%").attr("height","200%");
+glowFilter.append("feGaussianBlur").attr("stdDeviation","5").attr("result","blur");
+const glowMerge = glowFilter.append("feMerge");
+glowMerge.append("feMergeNode").attr("in","blur");
+glowMerge.append("feMergeNode").attr("in","SourceGraphic");
+
+// Force simulation
+const simulation = d3.forceSimulation(scholars)
+  .force("link", d3.forceLink(connections).id(d=>d.id).distance(d=>{
+    if(d.type==="cofounder")return 70;if(d.type==="coauthor")return 95;if(d.type==="advisor")return 110;return 140;
+  }).strength(d=>{
+    if(d.type==="cofounder")return 0.8;if(d.type==="coauthor")return 0.4;if(d.type==="advisor")return 0.5;return 0.12;
+  }))
+  .force("charge", d3.forceManyBody().strength(-380))
+  .force("center", d3.forceCenter(W/2, H/2))
+  .force("collision", d3.forceCollide().radius(36))
+  .force("x", d3.forceX(W/2).strength(0.03))
+  .force("y", d3.forceY(H/2).strength(0.03));
+
+// Links — use <path> for curved lines
+const linkG = g.append("g");
+const linkLines = linkG.selectAll("path").data(connections).join("path")
+  .attr("class", d => `link-line type-${d.type}`)
+  .attr("fill", "none");
+
+// Nodes
+const nodeG = g.append("g");
+const nodeGroups = nodeG.selectAll("g").data(scholars).join("g")
+  .attr("class","node-group")
+  .call(d3.drag().on("start",(e,d)=>{if(!e.active)simulation.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y;})
+    .on("drag",(e,d)=>{d.fx=e.x;d.fy=e.y;})
+    .on("end",(e,d)=>{if(!e.active)simulation.alphaTarget(0);d.fx=null;d.fy=null;}));
+
+function nodeSize(d){
+  const c=connections.filter(c=>{
+    const s=typeof c.source==='object'?c.source.id:c.source;
+    const t=typeof c.target==='object'?c.target.id:c.target;
+    return s===d.id||t===d.id;
+  }).length;
+  return Math.min(Math.max(c*1.3+4,5),16);
+}
+
+// Glow
+nodeGroups.append("circle").attr("class","node-glow")
+  .attr("r",d=>nodeSize(d)+8)
+  .attr("fill",d=>getColor(d.org))
+  .attr("opacity",0.15)
+  .attr("filter","url(#glow)");
+
+// Circle
+nodeGroups.append("circle").attr("class","node-circle")
+  .attr("r",d=>nodeSize(d))
+  .attr("fill",d=>getColor(d.org))
+  .attr("stroke","rgba(255,255,255,0.08)")
+  .attr("stroke-width",0.5)
+  .style("cursor","pointer");
+
+// Labels
+nodeGroups.append("text").attr("class","node-label")
+  .attr("dy",d=>nodeSize(d)+13)
+  .attr("font-size","10px")
+  .attr("letter-spacing","-0.08px")
+  .text(d=>d.name);
+
+// Tick — straight lines
+simulation.on("tick",()=>{
+  linkLines.attr("d", d => `M${d.source.x},${d.source.y} L${d.target.x},${d.target.y}`);
+  nodeGroups.attr("transform",d=>`translate(${d.x},${d.y})`);
+});
+
+// ===================================================================
+// INTERACTIONS
+// ===================================================================
+const tooltip = document.getElementById("tooltip");
+
+// Hover highlight
+nodeGroups.on("mouseenter",(event,d)=>{
+  const connected = new Set([d.id]);
+  connections.forEach(c=>{
+    const s=typeof c.source==='object'?c.source.id:c.source;
+    const t=typeof c.target==='object'?c.target.id:c.target;
+    if(s===d.id)connected.add(t);if(t===d.id)connected.add(s);
+  });
+  nodeGroups.classed("dimmed",n=>!connected.has(n.id)).classed("highlighted",n=>connected.has(n.id));
+  linkLines.classed("dimmed",l=>{
+    const s=typeof l.source==='object'?l.source.id:l.source;
+    const t=typeof l.target==='object'?l.target.id:l.target;
+    return s!==d.id&&t!==d.id;
+  }).classed("highlighted",l=>{
+    const s=typeof l.source==='object'?l.source.id:l.source;
+    const t=typeof l.target==='object'?l.target.id:l.target;
+    return s===d.id||t===d.id;
+  });
+  // Tooltip
+  const zhTip = scholarZh[d.id];
+  document.getElementById("tooltip-name").textContent = (currentLang === "zh" && zhTip && zhTip.zhName) ? zhTip.zhName + "  " + d.name : d.name;
+  document.getElementById("tooltip-org").textContent=d.org;
+  tooltip.classList.add("visible");
+}).on("mousemove",(event)=>{
+  tooltip.style.left=(event.clientX+14)+"px";
+  tooltip.style.top=(event.clientY-10)+"px";
+}).on("mouseleave",()=>{
+  nodeGroups.classed("dimmed",false).classed("highlighted",false);
+  linkLines.classed("dimmed",false).classed("highlighted",false);
+  tooltip.classList.remove("visible");
+});
+
+// Click → Detail Panel (openDetail defined later in i18n section)
+nodeGroups.on("click",(event,d)=>{
+  event.stopPropagation();
+  openDetail(d);
+});
+svg.on("click",()=>closeDetail());
+
+function closeDetail(){
+  document.getElementById("detail-panel").classList.remove("open");
+}
+document.getElementById("detail-close").addEventListener("click",e=>{e.stopPropagation();closeDetail();});
+
+// ===================================================================
+// SEARCH
+// ===================================================================
+document.getElementById("search-input").addEventListener("input",e=>{
+  const q=e.target.value.toLowerCase().trim();
+  if(!q){
+    nodeGroups.style("opacity",null);linkLines.style("opacity",null);return;
+  }
+  const match=new Set();
+  scholars.forEach(s=>{
+    if(s.name.toLowerCase().includes(q)||s.org.toLowerCase().includes(q)||s.title.toLowerCase().includes(q))match.add(s.id);
+  });
+  const expanded=new Set(match);
+  connections.forEach(c=>{
+    const s=typeof c.source==='object'?c.source.id:c.source;
+    const t=typeof c.target==='object'?c.target.id:c.target;
+    if(match.has(s))expanded.add(t);if(match.has(t))expanded.add(s);
+  });
+  nodeGroups.style("opacity",d=>match.has(d.id)?1:expanded.has(d.id)?0.4:0.04);
+  linkLines.style("opacity",l=>{
+    const s=typeof l.source==='object'?l.source.id:l.source;
+    const t=typeof l.target==='object'?l.target.id:l.target;
+    return(match.has(s)||match.has(t))?0.5:0.02;
+  });
+});
+
+// ===================================================================
+// FILTER PILLS
+// ===================================================================
+document.querySelectorAll(".filter-pill").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".filter-pill").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    const f=btn.dataset.filter;
+    if(f==="all"){nodeGroups.style("opacity",null);linkLines.style("opacity",null);return;}
+    const match=new Set();
+    scholars.forEach(s=>{if(s.field&&s.field.includes(f))match.add(s.id);});
+    nodeGroups.style("opacity",d=>match.has(d.id)?1:0.04);
+    linkLines.style("opacity",l=>{
+      const s=typeof l.source==='object'?l.source.id:l.source;
+      const t=typeof l.target==='object'?l.target.id:l.target;
+      return(match.has(s)&&match.has(t))?0.5:0.02;
+    });
+  });
+});
+
+// ===================================================================
+// KEYBOARD
+// ===================================================================
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape")closeDetail();
+  if(e.key==="/"&&document.activeElement!==document.getElementById("search-input")){
+    e.preventDefault();document.getElementById("search-input").focus();
+  }
+});
+
+// ===================================================================
+// I18N — LANGUAGE SYSTEM
+// ===================================================================
+let currentLang = "zh";
+
+const i18n = {
+  en: {
+    navTitle: "Tech Investor Graph", searchPlaceholder: "Search investors...",
+    filterAll: "All", filterDL: "China VC", filterNLP: "US VC", filterRL: "Early Stage", filterVision: "CVC", filterSafety: "Angel",
+    stats: (s, c) => `${s} investors · ${c} connections`,
+    legendOrgs: "Category", legendConns: "Connections",
+    legendDeepMind: "China Top VC", legendOpenAI: "China CVC", legendAnthropic: "Corporate",
+    legendMeta: "China Early VC", legendStanford: "Angel / Professor", legendUniversity: "US Other", legendStartup: "US Top VC",
+    legendCoauthor: "Co-invested", legendAdvisor: "Mentor/LP", legendCofounder: "Co-invested", legendColleague: "Peers",
+    sectionAbout: "About", sectionPapers: "Key Investments", sectionConnections: "Connections",
+    hintZoom: "Zoom", hintPan: "Pan", hintDetails: "Details", hintClose: "Close",
+    typeLabels: {coinvested:"Co-invested",mentor:"Mentor","industry-peer":"Peer","former-colleague":"Ex-Colleague"},
+  },
+  zh: {
+    navTitle: "科技投资人图谱", searchPlaceholder: "搜索投资人...",
+    filterAll: "全部", filterDL: "中国VC", filterNLP: "美国VC", filterRL: "早期", filterVision: "产业资本", filterSafety: "天使",
+    stats: (s, c) => `${s} 位投资人 · ${c} 条关系`,
+    legendOrgs: "分类", legendConns: "关系类型",
+    legendDeepMind: "中国顶级VC", legendOpenAI: "产业资本", legendAnthropic: "企业家",
+    legendMeta: "中国早期VC", legendStanford: "天使/教授", legendUniversity: "美国其他", legendStartup: "美国顶级VC",
+    legendCoauthor: "联合投资", legendAdvisor: "导师/LP", legendCofounder: "联合投资", legendColleague: "同行",
+    sectionAbout: "简介", sectionPapers: "代表投资", sectionConnections: "关系网络",
+    hintZoom: "缩放", hintPan: "平移", hintDetails: "详情", hintClose: "关闭",
+    typeLabels: {coinvested:"联合投资",mentor:"导师","industry-peer":"同行","former-colleague":"前同事"},
+  }
+};
+
+// Chinese scholar data
+const scholarZh = {
+  shennp:{zhName:"沈南鹏",title:"红杉中国/红杉创始合伙人 · 福布斯全球投资人榜#1",bio:"1967年生于上海。上海交大数学，哥伦比亚MBA，耶鲁MBA。德意志银行→联合创办携程（1999）、如家（2002）→2005年创办红杉中国，2023年更名红杉。福布斯全球最佳投资人#1（多次）。管理规模$560亿。投资：大疆、字节跳动、美团、拼多多、Shein。中国最成功的风险投资人。"},
+  zhanglei:{zhName:"张磊",title:"高瓴资本创始人 · 耶鲁门徒",bio:"1972年生于河南驻马店。人大，耶鲁MBA（David Swensen门生）。2005年用耶鲁捐赠基金$2000万创办高瓴。管理规模$600亿+。投资：腾讯、京东（$25.5亿单笔）、Zoom、石头、EcoFlow、TENWAYS（21%）、Haivivi、百度。理念：在变化中寻找价值。几乎投中了所有硬件独角兽。"},
+  xiongxg:{zhName:"熊晓鸽",title:"IDG资本 · 中国VC教父",bio:"1956年生于湖南。湖南大学，波士顿大学。1993年作为IDG首位中国合伙人将VC引入中国。投资：百度（Pre-IPO）、腾讯、影石Insta360（天使100万美元给刘靖康）、小米。被誉为中国VC教父。2023年去世。IDG管理规模$250亿+。"},
+  zhangying:{zhName:"张颖",title:"经纬中国创始合伙人 · 直言不讳",bio:"1973年生。中国电信工程师出身。2008年创办经纬中国。管理规模$70亿+。投资：VIPKID、Momenta、携程早期。以极其直言不讳的风格著称。2025-2026活跃于AI硬件投资。"},
+  zhuxiaohu:{zhName:"朱啸虎",title:"金沙江创投董事总经理 · 大胆下注AI硬件",bio:"1969年生于上海。上海交大，凯洛格MBA。2007年起任金沙江创投董事总经理。投资：滴滴（领投A轮，最大回报）、ofo、珞博芙崽（<10分钟决定）、PLAUD（$10亿估值）。以大胆下注和争议性观点著称。最近全力押注AI硬件和AI玩具。"},
+  caoyi:{zhName:"曹毅",title:"源码资本创始人 · 最年轻顶级VC",bio:"1987年生。2014年27岁创办源码资本，中国最年轻的顶级VC创始人。管理规模$50亿+。投资：字节跳动（早期）、美团、卧安机器人（多轮）、PDD。理念：代码是新的基础设施。"},
+  chenwg:{zhName:"陈维广",title:"蓝驰创投管理合伙人 · 具身智能之王",bio:"蓝驰创投中国管理合伙人。中国最活跃的具身智能投资人之一。投资：智元机器人（多轮）、逐际动力、宇树早期、它石智航。合伙人曹巍专门负责机器人投资。深信人形机器人。"},
+  huangmm:{zhName:"黄明明",title:"明势资本创始人 · 最懂硬件的VC",bio:"1976年生。北大。2014年创办明势资本。被称为中国最懂硬件的VC。投资：理想汽车（首个机构投资人）、极飞科技。深度聚焦智能制造、机器人、新能源车、具身智能。"},
+  lizhu:{zhName:"李竹",title:"英诺天使创始人 · 500+天使投资",bio:"2013年创办英诺天使基金。中国最活跃的天使投资人之一，投资500+家早期企业。聚焦：AI、机器人、智能硬件。以高频率、论文驱动的天使投资著称。"},
+  wushichun:{zhName:"吴世春",title:"梅花创投创始人 · 投资中国梦",bio:"1975年生于湖南。2014年创办梅花创投。投资：宇树科技（早期天使）、多家机器人公司、消费硬件。理念：投资中国梦。活跃于社交媒体分享投资逻辑。"},
+  liuqin:{zhName:"刘芹",title:"五源资本创始合伙人 · 小米$500K→$50亿回报",bio:"与Richard Liu联合创办五源资本（原晨兴资本）。创造中国VC史上最伟大的回报之一：$50万投入小米早期→$50亿+回报。也投资：快手、小鹏汽车。以极度耐心和信念投资著称。"},
+  leijun:{zhName:"雷军",title:"小米创始人 · 硬件生态创造者",bio:"1969年生于湖北。武大计算机。金山CEO→UCWeb→小米（2010）→顺为资本（2011）。创造了小米生态链模式：投资追觅、石头、云鲸、九号、Aqara、Loona等数百家。催生了大规模硬件创业浪潮。身家约250亿美元。小米市值$1000亿+。"},
+  shenjin:{zhName:"沈劲",title:"高通创投总裁 · 中美科技桥梁",bio:"高通高级副总裁，高通创投总裁。最早和最活跃的CVC之一，连接美国芯片和中国硬件。投资：小米（早期）、众多中国AI/机器人公司。美国半导体产业与深圳硬件生态的深度连接者。"},
+  lizexiang2:{zhName:"李泽湘",title:"港科大教授 · 硬件创业教父",bio:"港科大教授。中国硬件领域最重要的单一投资人。创办XbotPark松山湖基地，孵化60+家公司。通过清水湾基金投资：大疆、云鲸、LiberLive、逸动、卧安、海柔、RingConn、来牟。与高秉强和甘洁组成港科大教授投资三人组。"},
+  gaobq2:{zhName:"高秉强",title:"港科大教授 · 硬件天使传奇",bio:"港科大教授。与李泽湘并肩的天使投资人。代表作：2023年投100万美元救跃然创新(Haivivi)于破产边缘。通过Brizan Ventures II和未来科技基金投资RingConn。港科大教授三人组的核心成员。"},
+  luqi2:{zhName:"陆奇",title:"MiraclePlus创始人 · 中美桥梁",bio:"CMU计算机博士。IBM→Yahoo副总裁→微软执行副总裁→百度COO（李彦宏招募）→YC中国（Sam Altman亲自招募）→MiraclePlus。投资340+家公司。硅谷和中国科技之间的终极桥梁。美国科技界最高级别华人高管之一。"},
+  vinodkhosla:{title:"Khosla Ventures创始人 · Sun联合创始人",bio:"1955年生于印度。IIT Delhi EE，CMU，斯坦福MBA。1982年联合创办Sun Microsystems。2004年创办Khosla Ventures。投资：Rabbit R1（$3000万）、Figure AI、Field AI（$3.14亿A轮农业机器人）。深科技和突破性硬件。身家$78亿。"},
+  marca16z:{title:"a16z联合创始人 · 发明了网络浏览器",bio:"1971年生于爱荷华。UIUC CS。创造Mosaic（第一个网络浏览器），联合创办Netscape（1995 IPO）。2009年与Ben Horowitz联合创办a16z。管理$420亿+，总资产$900亿。投资：Figure AI、Anduril。2026.1融资$150亿。大规模AI硬件和机器人押注。"},
+  peterthiel:{title:"Founders Fund联合创始人 · PayPal教父",bio:"1967年生于德国，在美国长大。斯坦福哲学+法学。联合创办PayPal、Palantir。Founders Fund投资：SpaceX、Anduril、Stripe。Thiel Fellowship资助Chris Olah等硬件/AI创业者（$10万跳过大学）。理念：从0到1。"},
+  joshwolfe:{title:"Lux Capital联合创始人 · 深科技专家",bio:"2000年联合创办Lux Capital。深科技、国防科技、前沿硬件专家。领投：Anduril $15亿轮，投资Physical Intelligence，众多机器人/材料/生物科技。理念：投资未来，拥抱科幻变为现实。"},
+  jeffbezos:{title:"亚马逊创始人 · 机器人超级天使",bio:"1994年创办亚马逊。通过Bezos Expeditions个人投资。领投：Figure AI $6.75亿轮（→$390亿估值）、Physical Intelligence $4亿A轮（$20亿）。全球最大的人形机器人个人支持者之一。身家$2000亿+。"},
+  jensenhuang:{zhName:"黄仁勋",title:"NVIDIA创始人兼CEO · AI算力教父",bio:"1963年生于台湾，在俄勒冈长大。俄勒冈州立EE，斯坦福硕士。1993年联合创办NVIDIA。NVIDIA Ventures投资了几乎所有主要AI/机器人公司。市值$3万亿+。AI算力教父——每个机器人和AI模型都跑在他的GPU上。"},
+  masason:{zhName:"孙正义",title:"软银创始人 · 千亿愿景基金",bio:"1957年生于日本（韩裔）。UC Berkeley经济学。1981年创办软银。愿景基金1号：$1000亿（2017，史上最大）。投资：ARM、波士顿动力、Cruise、Humane（$2.3亿）。大胆押注机器人和AI硬件。争议性的撒网式投资方法。"},
+  natfriedman:{title:"前GitHub CEO · 硬件天使",bio:"前GitHub CEO（2018-2021，微软$75亿收购）。活跃的AI和硬件天使投资人。联合领投：The Bot Company $1.5亿种子（与Kyle Vogt）。也投资：Figure AI。代表科技高管转型硬件投资人的新浪潮。"},
+};
+
+// Chinese connection labels
+const connLabelZh = {
+  "Co-invested in DJI, overlapping hardware portfolios":"联合投资大疆，硬件组合重叠",
+  "China VC pioneers, both invested Baidu era":"中国VC先驱，百度时代同行",
+  "Both invested Xiaomi ecosystem companies":"均投资小米生态公司",
+  "Hillhouse invested Roborock, TENWAYS (Xiaomi ecosystem)":"高瓴投石头/TENWAYS（小米生态）",
+  "Both invested in Haivivi/hardware startups":"均投资跃然/硬件创业",
+  "Shanghai VC pioneers":"上海VC先驱",
+  "Both invested Robopoet/Fuzozo":"均投资珞博/芙崽",
+  "China early-stage VC leaders":"中国早期VC领袖",
+  "Both active in embodied AI investment":"均活跃于具身智能投资",
+  "Both focused on hardware + robotics":"均聚焦硬件+机器人",
+  "Both early Unitree investors":"均为宇树早期投资人",
+  "Both invested NEV + hardware ecosystem":"均投资新能源车+硬件生态",
+  "China angel investor peers":"中国天使投资同行",
+  "5Y invested Xiaomi $500K → $5B return":"五源投小米$50万→$50亿回报",
+  "Xiaomi ecosystem + XbotPark overlap":"小米生态+XbotPark交叉",
+  "Qualcomm Ventures early Xiaomi investor":"高通创投早期投小米",
+  "HKUST professor trio, XbotPark co-investment":"港科大教授三人组，XbotPark联投",
+  "Both invested Agibot ecosystem":"均投资智元生态",
+  "Both bold early-stage bet makers":"均以大胆早期下注著称",
+  "China VC ecosystem leaders":"中国VC生态领袖",
+  "Silicon Valley VC titans":"硅谷VC巨头",
+  "Both invested Figure AI":"均投资Figure AI",
+  "Both invested Figure AI, Anduril":"均投资Figure AI/Anduril",
+  "Silicon Valley VC founding generation":"硅谷VC创始一代",
+  "Both invested deep tech / defense tech":"均投资深科技/国防科技",
+  "Tech billionaire investors":"科技亿万富翁投资人",
+  "Both invested Physical Intelligence":"均投资Physical Intelligence",
+  "Both invested Figure AI via corporate":"均通过企业投资Figure AI",
+  "NVIDIA + a16z co-invested robotics":"英伟达+a16z联投机器人",
+  "Mega-fund VC peers":"超大基金VC同行",
+  "Both backed Figure AI":"均支持Figure AI",
+  "US hardware angel investors":"美国硬件天使投资人",
+  "Global VC titans, both Forbes Midas":"全球VC巨头，均上福布斯榜",
+  "Mega-fund investors, both Asia-focused":"超大基金，均聚焦亚洲",
+  "China VC next-generation leaders":"中国VC新一代领袖",
+};
+
+function applyLanguage(lang) {
+  currentLang = lang;
+  const t = i18n[lang];
+
+  // Nav
+  document.querySelector(".nav-title").textContent = t.navTitle;
+  document.getElementById("search-input").placeholder = t.searchPlaceholder;
+  document.getElementById("nav-stats").textContent = t.stats(scholars.length, connections.length);
+
+  // Filter pills
+  const pillMap = { all: t.filterAll, "china-vc": t.filterDL, "us-vc": t.filterNLP, early: t.filterRL, cvc: t.filterVision, angel: t.filterSafety };
+  document.querySelectorAll(".filter-pill").forEach(btn => {
+    btn.textContent = pillMap[btn.dataset.filter] || btn.textContent;
+  });
+
+  // Legend
+  const legendLabels = document.querySelectorAll("#legend .legend-label");
+  const legendTexts = [t.legendDeepMind, t.legendOpenAI, t.legendAnthropic, t.legendMeta, t.legendStanford, t.legendUniversity, t.legendStartup, t.legendCoauthor, t.legendAdvisor, t.legendCofounder, t.legendColleague];
+  legendLabels.forEach((el, i) => { if (legendTexts[i]) el.textContent = legendTexts[i]; });
+
+  const legendHeadings = document.querySelectorAll("#legend .legend-heading");
+  if (legendHeadings[0]) legendHeadings[0].textContent = t.legendOrgs;
+  if (legendHeadings[1]) legendHeadings[1].textContent = t.legendConns;
+
+  // Detail panel section titles
+  const sectionTitles = document.querySelectorAll(".detail-section-title");
+  if (sectionTitles[0]) sectionTitles[0].textContent = t.sectionAbout;
+  if (sectionTitles[1]) sectionTitles[1].textContent = t.sectionPapers;
+  if (sectionTitles[2]) sectionTitles[2].textContent = t.sectionConnections;
+
+  // Keyboard hints
+  const hints = document.querySelectorAll(".hint-item");
+  const hintTexts = [t.hintZoom, t.hintPan, t.hintDetails, t.hintClose];
+  hints.forEach((el, i) => {
+    const key = el.querySelector(".hint-key");
+    if (key && hintTexts[i]) {
+      el.innerHTML = "";
+      el.appendChild(key);
+      el.append(" " + hintTexts[i]);
+    }
+  });
+
+  // Update graph node labels with Chinese names
+  nodeGroups.selectAll(".node-label").text(d => {
+    const zhData = scholarZh[d.id];
+    if (lang === "zh" && zhData && zhData.zhName) return zhData.zhName;
+    return d.name;
+  });
+
+  // If detail panel is open, refresh it
+  if (document.getElementById("detail-panel").classList.contains("open") && window._currentDetailScholar) {
+    openDetail(window._currentDetailScholar);
+  }
+
+  // Toggle buttons
+  document.querySelectorAll(".lang-btn").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+}
+
+// Wikipedia article title mapping for avatar fetching
+const wikiTitles = {
+  shennp:"Shen_Nanpeng",zhanglei:"Zhang_Lei_(investor)",xiongxg:"Xiong_Xiaoge",
+  leijun:"Lei_Jun",marca16z:"Marc_Andreessen",peterthiel:"Peter_Thiel",
+  jeffbezos:"Jeff_Bezos",jensenhuang:"Jensen_Huang",masason:"Masayoshi_Son",
+  vinodkhosla:"Vinod_Khosla",luqi2:"Qi_Lu",
+};
+
+// Baidu Baike search names (Chinese name for baike lookup)
+const baikeTitles = {};
+
+// Photo cache
+const photoCache = {};
+
+async function fetchPhoto(scholarId) {
+  if (photoCache[scholarId]) return photoCache[scholarId];
+
+  // 1. Try Wikipedia first
+  const wiki = wikiTitles[scholarId];
+  if (wiki) {
+    try {
+      const resp = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wiki)}`);
+      if (resp.ok) {
+        const data = await resp.json();
+        const url = data.thumbnail?.source || null;
+        if (url) { photoCache[scholarId] = url; return url; }
+      }
+    } catch(e) {}
+  }
+
+  // 2. Try Chinese Wikipedia (zh.wikipedia)
+  const bkName = baikeTitles[scholarId];
+  if (bkName && !bkName.includes('_')) {
+    try {
+      const resp = await fetch(`https://zh.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(bkName)}`);
+      if (resp.ok) {
+        const data = await resp.json();
+        const url = data.thumbnail?.source || null;
+        if (url) { photoCache[scholarId] = url; return url; }
+      }
+    } catch(e) {}
+  }
+
+  return null;
+}
+
+// openDetail with i18n support
+function openDetail(d) {
+  const panel = document.getElementById("detail-panel");
+  panel.classList.add("open");
+  window._currentDetailScholar = d;
+
+  // Avatar — always reset to placeholder first
+  const initials = d.name.split(" ").map(w => w[0]).join("").slice(0, 2);
+  const oldAvatar = document.getElementById("detail-avatar");
+  const placeholder = document.createElement("div");
+  placeholder.className = "detail-avatar-placeholder";
+  placeholder.id = "detail-avatar";
+  placeholder.innerHTML = `<span>${initials}</span>`;
+  oldAvatar.replaceWith(placeholder);
+
+  // Load photo
+  const currentId = d.id;
+  if (photoCache[d.id]) {
+    const img = document.createElement("img");
+    img.className = "detail-avatar";
+    img.id = "detail-avatar";
+    img.alt = d.name;
+    img.src = photoCache[d.id];
+    placeholder.replaceWith(img);
+  } else {
+    fetchPhoto(d.id).then(url => {
+      // Only update if panel still shows same person
+      const nameEl = document.getElementById("detail-name");
+      if (!nameEl || nameEl.textContent !== d.name) return;
+      const el = document.getElementById("detail-avatar");
+      if (el && url) {
+        const img = document.createElement("img");
+        img.className = "detail-avatar";
+        img.id = "detail-avatar";
+        img.alt = d.name;
+        img.src = url;
+        el.replaceWith(img);
+      }
+    });
+  }
+
+  const t = i18n[currentLang];
+  const zh = scholarZh[d.id];
+  const displayName = (currentLang === "zh" && zh && zh.zhName) ? zh.zhName + "  " + d.name : d.name;
+
+  document.getElementById("detail-name").textContent = displayName;
+
+  if (currentLang === "zh" && zh) {
+    document.getElementById("detail-title").textContent = zh.title;
+    document.getElementById("detail-bio").textContent = zh.bio;
+  } else {
+    document.getElementById("detail-title").textContent = d.title;
+    document.getElementById("detail-bio").textContent = d.bio;
+  }
+
+  const orgEl = document.getElementById("detail-org");
+  const c = getColor(d.org);
+  orgEl.textContent = d.org;
+  orgEl.style.background = c + "18";
+  orgEl.style.color = c;
+  orgEl.style.border = `0.5px solid ${c}32`;
+
+  // Papers
+  const papersEl = document.getElementById("detail-papers");
+  const papersSection = document.getElementById("detail-papers-section");
+  if (d.papers && d.papers.length) {
+    papersSection.style.display = "block";
+    papersEl.innerHTML = d.papers.map(p => `<div class="paper-entry"><span class="paper-year">${p.y}</span><span class="paper-title">${p.t}</span></div>`).join("");
+  } else {
+    papersSection.style.display = "none";
+  }
+
+  // Section titles
+  const sectionTitles = document.querySelectorAll(".detail-section-title");
+  if (sectionTitles[0]) sectionTitles[0].textContent = t.sectionAbout;
+  if (sectionTitles[1]) sectionTitles[1].textContent = t.sectionPapers;
+  if (sectionTitles[2]) sectionTitles[2].textContent = t.sectionConnections;
+
+  // Connections
+  const connsEl = document.getElementById("detail-connections");
+  const related = connections.filter(c => {
+    const s = typeof c.source === 'object' ? c.source.id : c.source;
+    const tt = typeof c.target === 'object' ? c.target.id : c.target;
+    return s === d.id || tt === d.id;
+  });
+  connsEl.innerHTML = related.map(c => {
+    const s = typeof c.source === 'object' ? c.source.id : c.source;
+    const tt = typeof c.target === 'object' ? c.target.id : c.target;
+    const oid = s === d.id ? tt : s;
+    const o = scholars.find(sc => sc.id === oid);
+    if (!o) return '';
+    const label = currentLang === "zh" ? (connLabelZh[c.label] || c.label) : c.label;
+    const typeBadge = t.typeLabels[c.type];
+    return `<div class="conn-entry" data-id="${o.id}">
+      <div class="conn-dot" style="background:${getColor(o.org)}"></div>
+      <div class="conn-info"><div class="conn-name">${(currentLang === "zh" && scholarZh[o.id] && scholarZh[o.id].zhName) ? scholarZh[o.id].zhName + "  " + o.name : o.name}</div><div class="conn-relation">${label}</div></div>
+      <span class="conn-type-badge">${typeBadge}</span>
+    </div>`;
+  }).join("");
+
+  connsEl.querySelectorAll(".conn-entry").forEach(el => {
+    el.addEventListener("click", () => {
+      const target = scholars.find(s => s.id === el.dataset.id);
+      if (target) {
+        openDetail(target);
+        const tr = d3.zoomTransform(svg.node());
+        svg.transition().duration(600).ease(d3.easeCubicInOut).call(
+          zoomBehavior.transform,
+          d3.zoomIdentity.translate(W / 2 - target.x * tr.k, H / 2 - target.y * tr.k).scale(tr.k)
+        );
+      }
+    });
+  });
+};
+
+// Language toggle event
+document.querySelectorAll(".lang-btn").forEach(btn => {
+  btn.addEventListener("click", () => applyLanguage(btn.dataset.lang));
+});
+
+// ===================================================================
+// STATS
+// ===================================================================
+document.getElementById("nav-stats").textContent = i18n[currentLang].stats(scholars.length, connections.length);
+
+// Initial position
+setTimeout(()=>{
+  svg.transition().duration(1200).ease(d3.easeCubicInOut).call(
+    zoomBehavior.transform,
+    d3.zoomIdentity.translate(W*0.08,H*0.02).scale(0.88)
+  );
+},1800);
+
+// Resize
+window.addEventListener("resize",()=>{
+  const w=window.innerWidth,h=window.innerHeight-48;
+  simulation.force("center",d3.forceCenter(w/2,h/2));
+  simulation.force("x",d3.forceX(w/2).strength(0.03));
+  simulation.force("y",d3.forceY(h/2).strength(0.03));
+  simulation.alpha(0.3).restart();
+});
+
+applyLanguage("zh");
+
+// ===================================================================
+// GEO MAP — City distribution of founders
+// ===================================================================
+const cityMap = {
+  shennp:"shanghai",zhanglei:"beijing",xiongxg:"beijing",zhangying:"beijing",
+  zhuxiaohu:"shanghai",caoyi:"beijing",chenwg:"beijing",huangmm:"beijing",
+  lizhu:"beijing",wushichun:"beijing",liuqin:"beijing",
+  leijun:"beijing",shenjin:"usa",lizexiang2:"hongkong",gaobq2:"hongkong",luqi2:"beijing",
+  vinodkhosla:"usa",marca16z:"usa",peterthiel:"usa",joshwolfe:"usa",
+  jeffbezos:"usa",jensenhuang:"usa",masason:"tokyo",natfriedman:"usa",
+};
+
+// Simplified China map city positions (x,y in 200x160 viewBox)
+const cityPositions = {
+  shenzhen: {x:128, y:132, label:"深圳", labelEn:"Shenzhen"},
+  dongguan: {x:122, y:125, label:"东莞", labelEn:"Dongguan"},
+  hangzhou: {x:152, y:88, label:"杭州", labelEn:"Hangzhou"},
+  beijing:  {x:130, y:42, label:"北京", labelEn:"Beijing"},
+  shanghai: {x:160, y:82, label:"上海", labelEn:"Shanghai"},
+  suzhou:   {x:153, y:78, label:"苏州", labelEn:"Suzhou"},
+  chengdu:  {x:82, y:95, label:"成都", labelEn:"Chengdu"},
+  usa:      {x:20, y:30, label:"美国", labelEn:"USA"},
+  europe:   {x:20, y:70, label:"欧洲", labelEn:"Europe"},
+  india:    {x:20, y:110, label:"印度", labelEn:"India"},
+};
+
+function renderGeoMap() {
+  const svg = document.getElementById("geo-svg");
+  if (!svg) return;
+
+  // Count per city
+  const counts = {};
+  Object.values(cityMap).forEach(city => {
+    counts[city] = (counts[city] || 0) + 1;
+  });
+
+  // Draw simplified China outline
+  const chinaPath = "M60,20 L80,15 L100,18 L120,12 L140,20 L160,25 L175,35 L180,50 L175,65 L170,75 L175,85 L165,95 L160,105 L150,110 L145,120 L135,130 L130,140 L120,145 L110,140 L100,135 L90,140 L80,135 L70,125 L60,120 L50,110 L45,95 L40,80 L42,65 L45,50 L50,35 Z";
+
+  let html = `<path class="geo-outline" d="M15,20 L55,15 L60,40 L50,60 L30,55 L15,40 Z"/><path class="geo-outline" d="M100,20 L180,15 L185,50 L175,70 L165,100 L140,105 L110,95 L100,80 L95,50 Z"/><path class="geo-outline" d="M170,35 L185,33 L187,50 L180,55 Z"/>`;
+
+  // Draw bubbles
+  Object.entries(cityPositions).forEach(([city, pos]) => {
+    const count = counts[city] || 0;
+    if (count === 0) return;
+    const r = Math.max(Math.min(Math.sqrt(count) * 5, 22), 6);
+    html += `<circle class="geo-bubble" cx="${pos.x}" cy="${pos.y}" r="${r}"/>`;
+    html += `<text class="geo-count" x="${pos.x}" y="${pos.y + 2.5}">${count}</text>`;
+    const labelY = pos.y + r + 9;
+    const label = currentLang === "zh" ? pos.label : pos.labelEn;
+    html += `<text class="geo-label" x="${pos.x}" y="${labelY}">${label}</text>`;
+  });
+
+  svg.innerHTML = html;
+
+  // Update heading
+  const heading = document.getElementById("geo-heading");
+  if (heading) heading.textContent = currentLang === "zh" ? "投资人地域分布" : "Location Distribution";
+}
+
+renderGeoMap();
+
+// Re-render on language change
+const origApply = applyLanguage;
+applyLanguage = function(lang) {
+  origApply(lang);
+  renderGeoMap();
+};
+</script>
+</body>
+</html>
