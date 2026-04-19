@@ -1699,21 +1699,33 @@ function handleHashLink() {
   const hash = window.location.hash.replace('#', '');
   if (!hash) return;
   const target = scholars.find(s => s.id === hash);
-  if (target) {
-    // Wait for simulation to settle, then open and zoom
-    setTimeout(() => {
+  if (!target) return;
+
+  // Try multiple times until node position is ready
+  let attempts = 0;
+  const maxAttempts = 20;
+  function tryOpen() {
+    attempts++;
+    if (target.x !== undefined && target.y !== undefined && !isNaN(target.x)) {
       openDetail(target);
-      const tr = d3.zoomTransform(svg.node());
       const W = window.innerWidth, H = window.innerHeight - 48;
       svg.transition().duration(800).ease(d3.easeCubicInOut).call(
         zoomBehavior.transform,
         d3.zoomIdentity.translate(W/2 - target.x * 1.2, H/2 - target.y * 1.2).scale(1.2)
       );
-    }, 2500);
+      // Flash the node
+      nodeGroups.filter(d => d.id === hash).select(".node-glow")
+        .transition().duration(300).attr("opacity", 0.8)
+        .transition().duration(300).attr("opacity", 0.15);
+    } else if (attempts < maxAttempts) {
+      setTimeout(tryOpen, 500);
+    }
   }
+  // Start trying after initial render
+  setTimeout(tryOpen, 1000);
 }
 handleHashLink();
-window.addEventListener("hashchange", handleHashLink);
+window.addEventListener("hashchange", () => { handleHashLink(); });
 </script>
 </body>
 </html>
