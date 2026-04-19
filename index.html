@@ -1691,6 +1691,29 @@ applyLanguage = function(lang) {
   origApply(lang);
   renderGeoMap();
 };
+
+// ===================================================================
+// DEEP LINK — open detail panel from URL hash (e.g. #shennp)
+// ===================================================================
+function handleHashLink() {
+  const hash = window.location.hash.replace('#', '');
+  if (!hash) return;
+  const target = scholars.find(s => s.id === hash);
+  if (target) {
+    // Wait for simulation to settle, then open and zoom
+    setTimeout(() => {
+      openDetail(target);
+      const tr = d3.zoomTransform(svg.node());
+      const W = window.innerWidth, H = window.innerHeight - 48;
+      svg.transition().duration(800).ease(d3.easeCubicInOut).call(
+        zoomBehavior.transform,
+        d3.zoomIdentity.translate(W/2 - target.x * 1.2, H/2 - target.y * 1.2).scale(1.2)
+      );
+    }, 2500);
+  }
+}
+handleHashLink();
+window.addEventListener("hashchange", handleHashLink);
 </script>
 </body>
 </html>
