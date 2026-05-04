@@ -3,7 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tech Investor Graph</title>
+<title>投资人图谱 · Tech Investor Graph</title>
+<meta name="description" content="中国与全球科技投资人关系图谱 — 沈南鹏 / 张磊 / 朱啸虎 / 李泽湘 / 雷军等核心 GP、天使、CVC。每周更新投资动态与非共识判断。">
+<meta name="author" content="Jason Lin">
+<meta name="keywords" content="科技投资人, 投资人图谱, China VC, 沈南鹏, 张磊, 朱啸虎, 李泽湘, 雷军, 顺为资本, 红杉中国, 高瓴">
+<link rel="canonical" href="https://investor.jasonlin.tech/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://investor.jasonlin.tech/">
+<meta property="og:title" content="投资人图谱 · Tech Investor Graph">
+<meta property="og:description" content="中国与全球科技投资人关系图谱 — 核心 GP、天使、CVC。每周非共识洞察。">
+<meta property="og:site_name" content="Jason's Graphs">
+<meta property="og:locale" content="zh_CN">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://investor.jasonlin.tech/">
+<meta name="twitter:title" content="投资人图谱">
+<meta name="twitter:description" content="中国与全球科技投资人关系图谱。每周非共识洞察。">
+<meta name="twitter:creator" content="@jasonlin">
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "投资人图谱",
+  "alternateName": "Tech Investor Graph",
+  "url": "https://investor.jasonlin.tech/",
+  "description": "中国与全球科技投资人关系图谱。每周非共识洞察。",
+  "inLanguage": "zh-CN",
+  "author": {
+    "@type": "Person",
+    "name": "Jason Lin",
+    "url": "https://jasonlin.tech"
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://investor.jasonlin.tech/?node={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
 <script defer src="https://cloud.umami.is/script.js" data-website-id="d325eb73-0d8f-4529-aa76-f32ebfd92226"></script>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="d325eb73-0d8f-4529-aa76-f32ebfd92226"></script>
 <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -1356,13 +1402,24 @@ nodeGroups.on("mouseenter",(event,d)=>{
 // Click → Detail Panel (openDetail defined later in i18n section)
 nodeGroups.on("click",(event,d)=>{
   event.stopPropagation();
+  history.replaceState(null,'',`?node=${encodeURIComponent(d.id)}`);
   openDetail(d);
 });
 svg.on("click",()=>closeDetail());
 
 function closeDetail(){
   document.getElementById("detail-panel").classList.remove("open");
+  if(location.search) history.replaceState(null,'',location.pathname);
 }
+
+// Deep link: focus node from ?node=X URL param on load
+(function(){
+  const id=new URLSearchParams(location.search).get('node');
+  if(!id) return;
+  const target=scholars.find(s=>s.id===id);
+  if(!target) return;
+  setTimeout(()=>openDetail(target),700);
+})();
 document.getElementById("detail-close").addEventListener("click",e=>{e.stopPropagation();closeDetail();});
 
 // ===================================================================
