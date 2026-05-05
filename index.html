@@ -1446,6 +1446,33 @@ document.getElementById("detail-close").addEventListener("click",e=>{e.stopPropa
 // ===================================================================
 // SEARCH
 // ===================================================================
+// 投资机构中英文别名:搜「红杉」也能找到 Sequoia / HongShan
+const orgAlias = {
+  "Sequoia Capital":"红杉资本","HongShan (Sequoia China)":"红杉中国 红杉",
+  "Hillhouse Capital":"高瓴资本 高瓴","GL Ventures":"高瓴创投",
+  "Qiming Venture Partners":"启明创投 启明","Matrix Partners China":"经纬创投 经纬",
+  "IDG Capital":"IDG 资本","Source Code Capital":"源码资本 源码",
+  "5Y Capital":"五源资本 五源","Future Capital":"愉悦资本 愉悦",
+  "Frees Capital":"峰瑞资本 峰瑞","ZhenFund":"真格基金 真格",
+  "Shunwei Capital":"顺为资本 顺为","Xiaomi / Shunwei Capital":"小米 顺为",
+  "Lenovo Capital":"联想创投","Hua Chuang Capital":"华创资本 华创",
+  "Inno Angel Fund":"英诺天使","Northern Light VC":"北极光创投 北极光",
+  "Cowin Capital":"同创伟业","Fortune Capital (Dachen)":"达晨财智 达晨",
+  "BlueRun Ventures":"蓝驰创投 蓝驰","DCM":"DCM 资本",
+  "Jinqiu Capital":"锦秋资本 锦秋","GSR Ventures":"金沙江创投 金沙江",
+  "Plum Ventures":"梅花创投 梅花","Shenzhen Capital Group":"深创投",
+  "Shicheng Capital":"石城资本","Z-Ventures (Zhongke Chuangxing)":"中科创星",
+  "MiraclePlus":"奇绩创坛","XbotPark / Qingshuiwan Fund":"清水湾基金 XbotPark",
+  "HKUST / Brizan Ventures":"Brizan 港科大","SoftBank Vision Fund":"软银 SoftBank 孙正义",
+  "NVIDIA":"NVIDIA 英伟达","Bezos Expeditions":"贝佐斯 Bezos",
+  "OpenAI / Hydrazine Capital":"OpenAI Hydrazine","GV (Google Ventures)":"Google Ventures 谷歌创投",
+  "a16z":"a16z Andreessen Horowitz","Founders Fund":"Founders Fund Peter Thiel",
+  "Khosla Ventures":"Khosla 科斯拉","General Catalyst":"General Catalyst",
+  "Lux Capital":"Lux Capital","Greylock Partners":"Greylock",
+  "Innovation Endeavors":"Innovation Endeavors Eric Schmidt",
+  "Radical Ventures":"Radical Ventures","Playground Global":"Playground",
+  "Qualcomm Ventures":"Qualcomm 高通创投","Oasis Venture":"Oasis"
+};
 document.getElementById("search-input").addEventListener("input",e=>{
   const q=e.target.value.toLowerCase().trim();
   if(!q){
@@ -1457,6 +1484,7 @@ document.getElementById("search-input").addEventListener("input",e=>{
     const haystack = [
       s.name, s.org, s.title, s.bio, s.id,
       zh.zhName, zh.title, zh.bio,
+      orgAlias[s.org] || '',
       ...((s.papers||[]).map(p => p.t || ''))
     ].filter(Boolean).join(' \n ').toLowerCase();
     if(haystack.includes(q)) match.add(s.id);
