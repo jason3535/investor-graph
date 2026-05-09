@@ -1837,6 +1837,7 @@ const twitterHandles = {
   jordanjacobs: "jjacobs0", peterbarrett: "barrettp",
   hemanttaneja: "htaneja", ali: "alipartovi",
   leijun: "leijun",
+  traestephens: "traestephens", shahinfarshchi: "sfarshchi",
 };
 
 // Photo cache
@@ -1884,6 +1885,16 @@ async function fetchPhoto(scholarId) {
     if (ok) { photoCache[scholarId] = url; return url; }
   }
 
+  // 4. 终极兜底:ui-avatars 生成彩色 monogram
+  const scholar = scholars.find(s => s.id === scholarId);
+  if (scholar) {
+    const colors = ['0a84ff','30d158','ff375f','ff9f0a','5e5ce6','bf5af2','64d2ff','ffd60a','ff9500','32d74b'];
+    const hash = scholarId.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+    const bg = colors[hash % colors.length];
+    const url = `https://ui-avatars.com/api/?name=${encodeURIComponent(scholar.name)}&background=${bg}&color=fff&size=200&bold=true&font-size=0.4`;
+    photoCache[scholarId] = url;
+    return url;
+  }
   return null;
 }
 
