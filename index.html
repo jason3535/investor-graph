@@ -1107,7 +1107,7 @@ body.no-insights #graph-container {
 
 <!-- Insights Section (rendered by insights-widget.js) -->
 <section id="insights-section" data-graph="investor"></section>
-<script src="https://hardware.jasonlin.tech/insights-widget.js?v=45" defer></script>
+<script src="https://hardware.jasonlin.tech/insights-widget.js?v=46" defer></script>
 
 <script>
 // ===================================================================
@@ -1195,9 +1195,12 @@ const scholars = [
   {id:"liuwei2",name:"Liu Wei (刘维)",org:"Baidu Ventures (BV)",title:"CEO · AI 时代世界级 VC · 2026 中国 CVC 第一",field:["cvc","china-vc"],bio:"清华自动化本+硕。前联想之星合伙人(2012-2017)+ Comet Labs 董事长——10 余年系统性 AI 布局。2017-02 起任百度副总裁 + 百度风投 CEO,致力把 BV 打造为'AI 时代的世界级 VC'。已在中国+美国投资 70+ AI 项目,覆盖算法、芯片、传感器、机器平台、AIGC、具身智能、自动驾驶、医疗、教育、物流全栈。2026 年百度风投以 13 次投资位列互联网大厂 CVC 第一(联想创投/联想之星 11 次居第二)。投资:深朴智能(跟投 2026)、地平线机器人(早期)、自动驾驶/具身链。哲学:AI 创业公司要做'核心技术 + 高频应用',只做模型卖不动。对硬件/AI 创业者:刘维是中国 CVC 里最懂硬件 BOM/供应链/规模化的人之一,联想 10 年制造业经验。",papers:[{y:"2012",t:"加入联想之星合伙人"},{y:"2017",t:"任百度副总裁 + BV CEO"},{y:"2026",t:"BV 13 次投资居 CVC 榜首"}]},
   {id:"zhuyonghua",name:"Zhu Yonghua (朱拥华)",org:"Meituan Longzhu (美团龙珠)",title:"Founding Partner · 月之暗面 20 亿领投人",field:["cvc","china-vc"],bio:"2017 加入美团创立美团龙珠资本,任创始合伙人。背景:前美团早期消费投资负责人。主导投资:喜茶(早期 A 轮)、蜜雪冰城(早期)、理想汽车(早期参与)、自变量机器人(2025 美团领投 A 轮——国内唯一同时被字节/美团/阿里押注的具身公司)。2026-05 领投月之暗面 20 亿美元 C 轮(投后估值 200 亿美元,Kimi 母公司),刷新中国 AI 大模型单笔融资榜。投资风格:消费 + 新生活服务深耕,近两年扩展到 AI 大模型 + 具身 AI 应用层。对硬件/AI 创业者:朱拥华代表'消费投资人切入 AI'的新逻辑——他更看 AI 产品的'高频使用 + 真实变现',而不是技术深度。",papers:[{y:"2017",t:"加入美团创立美团龙珠"},{y:"2020",t:"理想汽车 IPO"},{y:"2025",t:"领投自变量机器人 A 轮"},{y:"2026",t:"领投月之暗面 20 亿美元 C 轮"}]},
   {id:"wanghuai",name:"Wang Huai (王淮)",org:"Linear Capital (线性资本)",title:"Founder & CEO · Ex-Facebook 第二位中国工程师",field:["china-vc","early"],bio:"1976 年生。中科大本+硕,Cornell CS PhD 在读期间退学加入 Facebook(2007-2011)任第二位中国籍工程师,负责支付反欺诈系统(后任 Facebook 反欺诈研发经理)。2014 回国创立线性资本,专注'数据 + AI'早期投资。线性资本 2024 同时入选 36 氪'中国 AI 产业投资基金'和'中国具身智能产业投资基金'双名册。投资:深朴智能(2026 领投)、Rokid(AR 眼镜)、地平线机器人(早期)、Manycore(酷家乐)等。哲学:技术是产品的载体,产品是市场的检验,结果是市场的验证。AI 赛道有泡沫但大多是'啤酒泡沫'(有价值的泡沫)。对硬件/AI 创业者:王淮是中国少有的'硅谷工程师 + 国内 VC'双重背景,以工程师视角看产品和团队。",papers:[{y:"2007",t:"加入 Facebook 第二位中国工程师"},{y:"2014",t:"创立线性资本"},{y:"2024",t:"入选 AI/具身双投资基金名册"},{y:"2026",t:"领投深朴智能新一轮"}]},
+  {id:"neuberger",name:"Anne Neuberger",org:"a16z",title:"General Partner & Head of Global Affairs · Ex-White House Deputy NSA",field:["us-vc"],bio:"Former U.S. Deputy National Security Advisor for Cyber and Emerging Technology; joined Andreessen Horowitz in June 2026 as General Partner and Head of Global Affairs, leading the firm's technology cooperation with allied nations across AI, robotics, defense and cybersecurity. A career intelligence official (ex-NSA), her hire makes a16z's geopolitical posture explicit — the firm openly frames its mission as serving 'America and her allies,' an extension of its American Dynamism franchise (grown from $600M in 2023 to ~$1.18B in 2026). The clearest example yet of the government-to-VC revolving door in frontier-tech investing.",papers:[{y:"2026",t:"Joined a16z as GP / Head of Global Affairs"}]}
 ];
 
 const connections = [
+  {"source": "neuberger","target": "marca16z","type": "former-colleague","label": "a16z partners"},
+  {"source": "neuberger","target": "katherineboyle","type": "former-colleague","label": "a16z American Dynamism / defense tech"},
   {"source": "neilmehta","target": "vinodkhosla","type": "coinvested","label": "Both backed Physical Intelligence (seed)"},
   {"source": "neilmehta","target": "joshwolfe","type": "coinvested","label": "Both backed Physical Intelligence with Lux"},
   {"source": "neilmehta","target": "roelofbotha","type": "coinvested","label": "Both invested Physical Intelligence"},
@@ -1679,6 +1682,7 @@ const i18n = {
 
 // Chinese scholar data
 const scholarZh = {
+  "neuberger":{"zhName": "安妮·诺伊伯格","title": "a16z 合伙人兼全球事务负责人 · 前白宫副国安顾问","bio": "前美国白宫副国家安全顾问（网络与新兴技术），2026 年 6 月加入安德森·霍洛维茨（a16z）任普通合伙人兼全球事务负责人，主导与盟国在 AI、机器人、国防、网络安全领域的技术合作。情报系统出身（前 NSA），她的加盟使 a16z 的地缘政治立场显性化——公司公开宣称使命是服务「美国及其盟友」，与其 American Dynamism 基金一脉相承（规模从 2023 年 6 亿美元增至 2026 年约 11.8 亿美元）。是前沿科技投资中「政府高官→顶级 VC 合伙人」旋转门的最清晰样本。"},
   "neilmehta":{"zhName": "尼尔·梅塔","title": "Greenoaks 创始人兼管理合伙人 · 物理 AI 押注者","bio": "生于旧金山，在加州 Atherton 长大。伦敦政经学院政治经济学学位。2012 年与 Benny Peretz 共同创立 Greenoaks Capital。Greenoaks 做长期、集中的科技押注，五只基金约 150 亿美元 AUM。2022 福布斯 Midas List 第 9。投资组合：Coupang（董事）、Wiz、Scale AI、Rippling、Robinhood、Toast。押注 Physical Intelligence（机器人基础模型）——参与其 2024 种子轮（与 Khosla、红杉、Lux、Thrive 同轮），后又领投大额融资。"},
   "joshkushner":{"zhName": "乔什·库什纳","title": "Thrive Capital 创始人兼管理合伙人 · OpenAI 领投人","bio": "Thrive Capital 创始人兼管理合伙人（2010 年创立）。Thrive 在 290 亿美元估值时首次押注 OpenAI，2024 年 10 月领投 OpenAI 66 亿美元融资（约 13 亿美元支票，1570 亿美元估值），与 Khosla、英伟达、微软同轮。2025 年 12 月以 2850 亿美元估值再加注 OpenAI 约 10 亿美元；2026 年 2 月关闭史上最大基金 Thrive X（超 100 亿美元，10 亿早期 + 90 亿成长，超额认购），覆盖 AI、太空、机器人、生命科学，并持续跟投 Physical Intelligence（2024 年 A 轮与 Lux、Bond 共同领投）。其他组合：Stripe、SpaceX、Scale AI、Wiz。"},
   "roncao":{"zhName": "曹大容","title": "云九资本创始人兼管理合伙人 · 光速中国创始人","bio": "24 年以上横跨硅谷与亚洲的跨境创投经验。2006 年开启光速创投中国业务并联合创立光速中国（Lightspeed China Partners）。2016 年创立云九资本（Sky9 Capital），早期科技基金，聚焦 AI、半导体、硬科技、消费与生物科技；团队自 2011 年起管理近 20 亿美元。投资组合：美团/大众点评、拼多多、文远知行、晶泰科技、月之暗面（Kimi）。"},
@@ -1767,6 +1771,8 @@ const scholarZh = {
 
 // Chinese connection labels
 const connLabelZh = {
+  "a16z partners":"a16z 合伙人",
+  "a16z American Dynamism / defense tech":"a16z American Dynamism / 国防科技",
   "Co-invested in DJI, overlapping hardware portfolios":"联合投资大疆，硬件组合重叠",
   "China VC pioneers, both invested Baidu era":"中国VC先驱，百度时代同行",
   "Both invested Xiaomi ecosystem companies":"均投资小米生态公司",
