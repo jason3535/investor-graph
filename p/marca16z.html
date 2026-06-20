@@ -1,5 +1,6 @@
 <!doctype html><html lang="zh-CN"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<script>try{document.documentElement.className=(localStorage.getItem('graphLang')==='en')?'lang-en':'lang-zh'}catch(e){document.documentElement.className='lang-zh'}</script>
 <title>Marc Andreessen · a16z | 投资人图谱</title>
 <meta name="description" content="1971年生于爱荷华。UIUC CS。创造Mosaic（第一个网络浏览器），联合创办Netscape（1995 IPO）。2009年与Ben Horowitz联合创办a16z。管理$420亿+，总资产$900亿。投资：Figure AI、Anduril。2026.1融资$150亿。大规模AI硬件和…">
 <link rel="canonical" href="https://investor.jasonlin.tech/p/marca16z.html">
@@ -23,26 +24,37 @@ h1{font-size:40px;margin:22px 0 6px;letter-spacing:-.01em}
 .role{font-size:18px;color:var(--blue);margin:10px 0 0;font-weight:600}
 .fields{margin:18px 0 0}.tag{display:inline-block;font-size:13px;color:var(--mut);border:1px solid #333;border-radius:999px;padding:3px 12px;margin:0 8px 8px 0}
 .bio{font-size:18px;color:#d2d2d7;margin:28px 0;white-space:pre-wrap}
-.bio.en{color:var(--mut);font-size:16px}
+.avatar{width:108px;height:108px;border-radius:50%;object-fit:cover;display:block;margin:8px 0 4px;background:#1c1c1e;box-shadow:0 0 0 1px rgba(255,255,255,.1)}
+.avatar.mono{display:flex;align-items:center;justify-content:center;font:700 42px/1 'SF Pro Display',-apple-system,sans-serif;color:#fff;letter-spacing:.01em}
+.langtoggle{position:fixed;top:18px;right:20px;z-index:50;min-width:46px;padding:7px 14px;border-radius:999px;background:rgba(255,255,255,.08);color:var(--fg);border:1px solid rgba(255,255,255,.16);font:600 14px/1 'PingFang SC','SF Pro Text',-apple-system,system-ui,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px)}
+.langtoggle:hover{background:rgba(255,255,255,.16)}
+html.lang-zh .i18n-en{display:none}html.lang-en .i18n-zh{display:none}
+@media(max-width:520px){.langtoggle{top:12px;right:12px}}
 h2{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#86868b;margin:40px 0 14px}
 ul{list-style:none;padding:0;margin:0}li{padding:8px 0;border-bottom:1px solid #1a1a1a;font-size:16px;color:#d2d2d7}
 .y{display:inline-block;min-width:52px;color:#6e6e73;font-variant-numeric:tabular-nums}
 li a,.bio a{color:var(--blue);text-decoration:none}
 .nbr{display:flex;flex-direction:column;padding:12px 14px;background:var(--card);border-radius:12px;margin:0 0 10px;text-decoration:none;color:var(--fg)}
 .nbr b{font-size:16px}.nbr span{font-size:13px;color:var(--mut);margin-top:2px}
-.cta{display:inline-block;margin:30px 0 0;padding:14px 26px;background:var(--blue);color:#fff;border-radius:999px;text-decoration:none;font-weight:600;font-size:17px}
+.cta{display:inline-block;margin:30px 12px 0 0;padding:14px 26px;background:var(--blue);color:#fff;border-radius:999px;text-decoration:none;font-weight:600;font-size:17px}
+.cta2{display:inline-block;margin:30px 0 0;padding:14px 26px;background:rgba(124,92,255,.16);color:#cbb9ff;border-radius:999px;text-decoration:none;font-weight:600;font-size:17px}
 .back{display:inline-block;margin-top:36px;color:var(--mut);text-decoration:none;font-size:15px}
 @media(max-width:520px){h1{font-size:32px}.wrap{padding:36px 18px 72px}}
-</style></head><body><div class="wrap">
-<a class="eyebrow" href="/">投资人图谱 · Investor Graph ↗</a>
-<h1>Marc Andreessen</h1>
+</style></head><body>
+<button class="langtoggle" id="langtoggle" type="button" aria-label="切换语言 / Toggle language"><span class="i18n-zh">EN</span><span class="i18n-en">中</span></button>
+<div class="wrap">
+<a class="eyebrow" href="/"><span class="i18n-zh">投资人图谱</span><span class="i18n-en">Investor Graph</span> ↗</a>
+<div class="avatar mono" style="background:linear-gradient(145deg,rgba(10,132,255,.92),rgba(10,132,255,.5));box-shadow:0 0 0 1px rgba(255,255,255,.08),0 0 0 7px rgba(10,132,255,.14)">MA</div>
+<h1><span class="i18n-zh">Marc Andreessen</span><span class="i18n-en">Marc Andreessen</span></h1>
 <p class="org">a16z</p>
-<p class="role">a16z联合创始人 · 发明了网络浏览器</p>
+<p class="role"><span class="i18n-zh">a16z联合创始人 · 发明了网络浏览器</span><span class="i18n-en">Co-founder of a16z · Invented the Web Browser</span></p>
 <div class="fields"><span class="tag">us-vc</span></div>
-<div class="bio">1971年生于爱荷华。UIUC CS。创造Mosaic（第一个网络浏览器），联合创办Netscape（1995 IPO）。2009年与Ben Horowitz联合创办a16z。管理$420亿+，总资产$900亿。投资：Figure AI、Anduril。2026.1融资$150亿。大规模AI硬件和机器人押注。</div>
-<div class="bio en">Born 1971 Iowa. UIUC CS. Created Mosaic (first web browser), co-founded Netscape (IPO 1995). Co-founded a16z 2009 with Ben Horowitz. AUM: $42B+, $90B total assets. Invested: Figure AI, Anduril. Raised $15B new funds Jan 2026. Massive AI hardware and robotics bets.</div>
-<a class="cta" href="/?node=marca16z">在关系图谱中查看 Marc Andreessen →</a>
-<h2>时间线 / Timeline</h2><ul><li><span class="y">1994</span> Created Mosaic/Netscape</li><li><span class="y">2009</span> Co-founded a16z</li><li><span class="y">2026</span> Raised $15B, $90B total assets</li></ul>
-<h2>关系网络 / Connections</h2><a class="nbr" href="/p/neuberger.html"><b>安妮·诺伊伯格 Anne Neuberger</b><span>a16z 合伙人</span></a><a class="nbr" href="/p/vinodkhosla.html"><b>Vinod Khosla</b><span>硅谷VC巨头</span></a><a class="nbr" href="/p/jeffbezos.html"><b>Jeff Bezos</b><span>均投资Figure AI/Anduril</span></a><a class="nbr" href="/p/peterthiel.html"><b>Peter Thiel</b><span>硅谷VC创始一代</span></a><a class="nbr" href="/p/joshwolfe.html"><b>Josh Wolfe</b><span>均投资深科技/国防科技</span></a><a class="nbr" href="/p/jensenhuang.html"><b>黄仁勋 Jensen Huang</b><span>英伟达+a16z联投机器人</span></a><a class="nbr" href="/p/masason.html"><b>孙正义 Masayoshi Son</b><span>超大基金VC同行</span></a><a class="nbr" href="/p/katherineboyle.html"><b>Katherine Boyle</b><span>a16z American Dynamism合伙人</span></a><a class="nbr" href="/p/davidulevitch.html"><b>David Ulevitch</b><span>a16z American Dynamism联合负责人</span></a><a class="nbr" href="/p/hemanttaneja.html"><b>Hemant Taneja</b><span>均投Anduril</span></a><a class="nbr" href="/p/ericschmidt.html"><b>Eric Schmidt</b><span>硅谷AI超级投资人</span></a><a class="nbr" href="/p/reidhoffman.html"><b>Reid Hoffman</b><span>硅谷VC巨头，均为董事级AI投资人</span></a>
-<a class="back" href="/">← 返回完整图谱 投资人图谱</a>
-</div></body></html>
+<div class="bio i18n-zh">1971年生于爱荷华。UIUC CS。创造Mosaic（第一个网络浏览器），联合创办Netscape（1995 IPO）。2009年与Ben Horowitz联合创办a16z。管理$420亿+，总资产$900亿。投资：Figure AI、Anduril。2026.1融资$150亿。大规模AI硬件和机器人押注。</div><div class="bio i18n-en">Born 1971 Iowa. UIUC CS. Created Mosaic (first web browser), co-founded Netscape (IPO 1995). Co-founded a16z 2009 with Ben Horowitz. AUM: $42B+, $90B total assets. Invested: Figure AI, Anduril. Raised $15B new funds Jan 2026. Massive AI hardware and robotics bets.</div>
+<a class="cta" href="/?node=marca16z"><span class="i18n-zh">在关系图谱中查看 Marc Andreessen →</span><span class="i18n-en">View Marc Andreessen in the graph →</span></a>
+
+<h2><span class="i18n-zh">时间线</span><span class="i18n-en">Timeline</span></h2><ul><li><span class="y">1994</span> Created Mosaic/Netscape</li><li><span class="y">2009</span> Co-founded a16z</li><li><span class="y">2026</span> Raised $15B, $90B total assets</li></ul>
+<h2><span class="i18n-zh">关系网络</span><span class="i18n-en">Connections</span></h2><a class="nbr" href="/p/neuberger.html"><b>安妮·诺伊伯格 Anne Neuberger</b><span>a16z 合伙人</span></a><a class="nbr" href="/p/vinodkhosla.html"><b>Vinod Khosla</b><span>硅谷VC巨头</span></a><a class="nbr" href="/p/jeffbezos.html"><b>Jeff Bezos</b><span>均投资Figure AI/Anduril</span></a><a class="nbr" href="/p/peterthiel.html"><b>Peter Thiel</b><span>硅谷VC创始一代</span></a><a class="nbr" href="/p/joshwolfe.html"><b>Josh Wolfe</b><span>均投资深科技/国防科技</span></a><a class="nbr" href="/p/jensenhuang.html"><b>黄仁勋 Jensen Huang</b><span>英伟达+a16z联投机器人</span></a><a class="nbr" href="/p/masason.html"><b>孙正义 Masayoshi Son</b><span>超大基金VC同行</span></a><a class="nbr" href="/p/katherineboyle.html"><b>Katherine Boyle</b><span>a16z American Dynamism合伙人</span></a><a class="nbr" href="/p/davidulevitch.html"><b>David Ulevitch</b><span>a16z American Dynamism联合负责人</span></a><a class="nbr" href="/p/hemanttaneja.html"><b>Hemant Taneja</b><span>均投Anduril</span></a><a class="nbr" href="/p/ericschmidt.html"><b>Eric Schmidt</b><span>硅谷AI超级投资人</span></a><a class="nbr" href="/p/reidhoffman.html"><b>Reid Hoffman</b><span>硅谷VC巨头，均为董事级AI投资人</span></a>
+<a class="back" href="/"><span class="i18n-zh">← 返回完整图谱</span><span class="i18n-en">← Back to the graph</span></a>
+</div>
+<script>(function(){var b=document.getElementById('langtoggle');if(!b)return;b.addEventListener('click',function(){var en=document.documentElement.classList.contains('lang-en');var n=en?'zh':'en';document.documentElement.className='lang-'+n;try{localStorage.setItem('graphLang',n)}catch(e){}});})();</script>
+</body></html>
