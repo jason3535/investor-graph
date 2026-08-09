@@ -1114,6 +1114,8 @@ body.no-insights #graph-container {
 // DATA
 // ===================================================================
 const scholars = [
+{id:"garrytan",name:"Garry Tan",org:"Y Combinator",title:"President & CEO of Y Combinator",field:["us-vc","early"],bio:"President & CEO of Y Combinator since January 2023. Co-founded Posterous (YC W08, acquired by Twitter) and blog platform-era design tooling before becoming a YC partner (2011-2015). Co-founded Initialized Capital with Alexis Ohanian, backing Coinbase at seed — one of the best seed checks in venture history — plus Instacart and Flexport. Known for founder-first, design-literate early-stage investing and a large builder audience on YouTube.",papers:[{y:"2008",t:"Posterous (YC W08)"},{y:"2011",t:"YC 合伙人"},{y:"2012",t:"共同创办 Initialized Capital · Coinbase 种子轮"},{y:"2023",t:"出任 YC 总裁兼 CEO"}]},
+{id:"benedictevans",name:"Benedict Evans",org:"Independent / ex-a16z",title:"Independent Tech Analyst · ex-a16z Partner",field:["us-vc"],bio:"British technology analyst. Spent years as a sell-side equity and telecoms analyst before joining Andreessen Horowitz as a partner (2014-2019), where he shaped the firm's public thinking on mobile. Now independent: his annual macro presentation and weekly newsletter (200k+ subscribers) are among the most-read strategic analyses of the tech industry.",papers:[{y:"2014",t:"加入 a16z 任合伙人"},{y:"2019",t:"独立分析师 · Newsletter"},{y:"2024",t:"年度报告《AI Eats the World》"}]},
   {"id": "neilmehta","name": "Neil Mehta","org": "Greenoaks Capital","title": "Founder & Managing Partner · Physical AI Backer","field": ["us-vc"],"bio": "Born San Francisco,grew up Atherton CA. LSE degree in government and economics. Co-founded Greenoaks Capital in 2012 with Benny Peretz. Greenoaks makes long-term concentrated tech bets,~$15B AUM across five funds. Forbes Midas List #9 (2022). Portfolio: Coupang (board),Wiz,Scale AI,Rippling,Robinhood,Toast. Backed Physical Intelligence (robot foundation models) — participated in its 2024 seed alongside Khosla,Sequoia,Lux and Thrive,and later led a major round.","papers": [{"y": "2012","t": "Co-founded Greenoaks with Benny Peretz"},{"y": "2024","t": "Backed Physical Intelligence seed"}]},
   {"id": "joshkushner","name": "Josh Kushner","org": "Thrive Capital","title": "Founder & Managing Partner · OpenAI Lead Investor","field": ["us-vc"],"bio": "Founder and managing partner of Thrive Capital (founded 2010). Thrive made its first OpenAI bet at a $29B valuation,then led OpenAI's October 2024 $6.6B round (~$1.3B check) at a $157B valuation alongside Khosla,Nvidia and Microsoft. Closed Thrive X — its largest fund ever at over $10B (Feb 2026; $1B early-stage + $9B growth),heavily oversubscribed — with mandate spanning AI,space,robotics and life sciences. Reinvested ~$1B in OpenAI at a $285B valuation (Dec 2025) and remains a returning backer of Physical Intelligence (2024 Series A co-lead with Lux and Bond). Other portfolio: Stripe,SpaceX,Scale AI,Wiz.","papers": [{"y": "2010","t": "Founded Thrive Capital"},{"y": "2024","t": "Led OpenAI $6.6B round; co-led Physical Intelligence Series A"},{"y": "2025","t": "Reinvested ~$1B in OpenAI at $285B valuation"},{"y": "2026","t": "Closed Thrive X — $10B, largest fund ever"}]},
   {"id": "roncao","name": "Ron Cao","org": "Sky9 Capital","title": "Founder & Managing Partner · Ex-Lightspeed China Founder","field": ["china-vc","early"],"bio": "24+ years of cross-border VC across Silicon Valley and Asia. Started Lightspeed Venture Partners' China operations in 2006 and co-founded Lightspeed China Partners. Founded Sky9 Capital in 2016,an early-stage tech firm focused on AI,semiconductors,hard tech,consumer and biotech; team has managed near $2B since 2011. Portfolio: Meituan/Dianping,Pinduoduo,WeRide,XtalPi and Moonshot AI (Kimi).","papers": [{"y": "2006","t": "Co-founded Lightspeed China Partners"},{"y": "2016","t": "Founded Sky9 Capital"}]},
@@ -1206,6 +1208,8 @@ const scholars = [
 ];
 
 const connections = [
+{source:"garrytan",target:"samaltman",type:"industry-peer",label:"YC 总裁先后任(Altman 2014-19,Tan 2023-)"},
+{source:"benedictevans",target:"marca16z",type:"former-colleague",label:"a16z 合伙人(2014-2019)"},
   {"source": "neuberger","target": "marca16z","type": "former-colleague","label": "a16z partners"},
   {"source": "neuberger","target": "katherineboyle","type": "former-colleague","label": "a16z American Dynamism / defense tech"},
   {"source": "neilmehta","target": "vinodkhosla","type": "coinvested","label": "Both backed Physical Intelligence (seed)"},
@@ -1703,6 +1707,8 @@ const i18n = {
 
 // Chinese scholar data
 const scholarZh = {
+garrytan:{zhName:"加里·谭",title:"Y Combinator 总裁兼 CEO",bio:"2023 年 1 月起执掌 Y Combinator。曾创办 Posterous(YC W08,被 Twitter 收购),2011-2015 年任 YC 合伙人;与 Alexis Ohanian 共同创办 Initialized Capital,种子轮投中 Coinbase——风投史上最佳种子支票之一,另投 Instacart、Flexport。以创始人优先、懂设计的早期投资风格与庞大的 YouTube 创业者受众著称。"},
+benedictevans:{zhName:"本尼迪克特·埃文斯",title:"独立科技分析师 · 前 a16z 合伙人",bio:"英国科技分析师。卖方股票与电信分析师出身,2014-2019 年任 Andreessen Horowitz 合伙人,塑造了该基金对移动时代的公开叙事。现为独立分析师:年度宏观报告与周报(20 万+ 订阅)是科技行业被阅读最多的战略分析之一。"},
   "liorsusan":{"zhName":"利奥尔·苏珊","title":"Eclipse Ventures 创始合伙人 · 物理 AI","bio":"以色列裔美国投资人，创办 Eclipse Ventures（约 100 亿美元 AUM），是风投界最纯粹的「物理 AI」/ 工业科技品牌。2026 年 4 月募资 13 亿美元投资并孵化物理 AI 公司；代表投资包括 Cerebras、Wayve、Bedrock Robotics、Redwood Materials。"},
   "mamoonhamid":{"zhName":"马蒙·哈米德","title":"Kleiner Perkins 合伙人","bio":"与 Ilya Fushman 一同把 Kleiner Perkins 围绕 AI 重塑。2026 年 3 月该所募集 35 亿美元 AI 弹药（10 亿早期 KP22 + 25 亿成长），代表投资有 Harvey、Anthropic、SSI、Together AI、Applied Intuition。"},
   "bradgerstner":{"zhName":"布拉德·格斯特纳","title":"Altimeter Capital 创始人兼 CEO","bio":"跨界投资人、知名 AI 评论者（BG2 播客），2026 年 5 月共同领投 Anthropic 65 亿美元 H 轮——迄今最大 AI 股权融资，是前沿实验室的常客投资人。"},
@@ -1972,6 +1978,7 @@ function applyLanguage(lang) {
 
 // Wikipedia article title mapping for avatar fetching
 const wikiTitles = {
+  garrytan: "Garry Tan",
   shennp:"Shen_Nanpeng",zhanglei:"Zhang_Lei_(investor)",xiongxg:"Xiong_Xiaoge",
   leijun:"Lei_Jun",marca16z:"Marc_Andreessen",peterthiel:"Peter_Thiel",
   jeffbezos:"Jeff_Bezos",jensenhuang:"Jensen_Huang",masason:"Masayoshi_Son",
