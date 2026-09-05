@@ -54,13 +54,17 @@ li a,.bio a{color:var(--blue);text-decoration:none}
 <p class="role"><span class="i18n-zh">Menlo Ventures 合伙人 · 押上全公司的 Anthropic 赌注</span><span class="i18n-en">Partner at Menlo · The Anthropic Bet</span></p>
 <div class="fields"><span class="tag">us-vc</span><span class="tag">deeptech</span></div>
 <div class="bio i18n-zh">Menlo Ventures 合伙人。Menlo 累计投入 Anthropic 的 10 亿美元,在这家实验室估值逼近 1 万亿之际已值约 140 亿——可以说是本轮 AI 周期最成功的单笔风险投资持仓。2026 年 6 月 Menlo 募集 30 亿美元(Fund XVII + Inflection IV),是其 50 年历史上最大一次募资,全面押注 AI。Menlo 还与 Anthropic 联合运作 1 亿美元的 Anthology 基金,已种子投资 60 多家前沿 AI 公司。</div><div class="bio i18n-en">Partner at Menlo Ventures, the firm that famously \&quot;bet the firm\&quot; on Anthropic. Menlo&#x27;s cumulative $1B into Anthropic is now worth an estimated $14B as the lab approaches a $1T valuation — arguably the single best venture position of the AI cycle. In June 2026 Menlo raised $3B across Fund XVII and Inflection IV, the largest raise in its 50-year history, going all-in on AI. Menlo also runs the $100M Anthology Fund jointly with Anthropic, seeding 60+ frontier-AI startups.</div>
-<a class="cta" href="/?node=venkyganesan"><span class="i18n-zh">在关系图谱中查看 Venky Ganesan →</span><span class="i18n-en">View Venky Ganesan in the graph →</span></a>
+<a class="cta" href="/?node=venkyganesan"><span class="i18n-zh">在关系图谱中查看 Venky Ganesan →</span><span class="i18n-en">View Venky Ganesan in the graph →</span></a><button class="cta cta-share" onclick="shareThis(this)"><span class="i18n-zh">分享</span><span class="i18n-en">Share</span></button>
 
 <h2><span class="i18n-zh">时间线</span><span class="i18n-en">Timeline</span></h2><ul></ul>
 <h2><span class="i18n-zh">关系网络</span><span class="i18n-en">Connections</span></h2><a class="nbr" href="/p/timtully.html"><b>蒂姆·塔利 Tim Tully</b><span>Menlo AI team — the Anthropic position</span></a><a class="nbr" href="/p/bradgerstner.html"><b>Brad Gerstner</b><span>Both rode Anthropic to the top of the AI cycle</span></a><a class="nbr" href="/p/sarahguo.html"><b>Sarah Guo</b><span>AI-native specialists vs 50-year incumbent going all-in</span></a>
 <a class="back" href="/"><span class="i18n-zh">← 返回完整图谱</span><span class="i18n-en">← Back to the graph</span></a>
 </div>
 <script>(function(){var b=document.getElementById('langtoggle');if(!b)return;b.addEventListener('click',function(){var en=document.documentElement.classList.contains('lang-en');var n=en?'zh':'en';document.documentElement.className='lang-'+n;try{localStorage.setItem('graphLang',n)}catch(e){}});})();</script>
+<style>.cta-share{margin-left:8px;background:transparent;color:#0a84ff;border:1px solid rgba(255,255,255,.18);cursor:pointer;font:inherit;font-weight:600}</style>
+<script>function shareThis(b){var u=document.querySelector('link[rel=canonical]').href,t=document.title,d=(document.querySelector('meta[name=description]')||{}).content||'';
+if(navigator.share){navigator.share({title:t,text:d,url:u}).catch(function(){});return;}
+try{navigator.clipboard.writeText(u).then(function(){var o=b.innerHTML;b.textContent='已复制链接 · Copied';setTimeout(function(){b.innerHTML=o},1600)})}catch(e){}}</script>
 <script>(function(){try{
 var UA=navigator.userAgent||'';
 if(/bot|crawl|spider|slurp|headless|lighthouse|bingpreview|facebookexternalhit/i.test(UA))return;

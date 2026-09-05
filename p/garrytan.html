@@ -1,7 +1,9 @@
 <!doctype html><html lang="zh-CN"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#000000">
-<style>:root{color-scheme:dark}html{background:#000}</style>
+<style>/* 纯深色页:钉死 dark 并把背景写在 html 上,否则 iOS Safari 状态栏区域按浅色画,
+   深色页面顶上留一条白边(2026-08-15 实测) */
+:root{color-scheme:dark}html{background:#000}</style>
 <script>try{document.documentElement.className=(localStorage.getItem('graphLang')==='en')?'lang-en':'lang-zh'}catch(e){document.documentElement.className='lang-zh'}</script>
 <title>Garry Tan · Y Combinator | 投资人图谱</title>
 <meta name="description" content="2023 年 1 月起执掌 Y Combinator。曾创办 Posterous(YC W08,被 Twitter 收购),2011-2015 年任 YC 合伙人;与 Alexis Ohanian 共同创办 Initialized Capital,种子轮投中 Coinbase——风投史上最佳种子支票…">
@@ -50,16 +52,20 @@ li a,.bio a{color:var(--blue);text-decoration:none}
 <h1><span class="i18n-zh">加里·谭</span><span class="i18n-en">Garry Tan</span></h1>
 <p class="org">Y Combinator</p>
 <p class="role"><span class="i18n-zh">Y Combinator 总裁兼 CEO</span><span class="i18n-en">President &amp; CEO of Y Combinator</span></p>
-<div class="fields"><span class="tag">us-vc</span><span class="tag">early</span></div>
+<div class="fields"><span class="tag">us-vc</span><span class="tag">early</span><span class="tag">founder-vc</span></div>
 <div class="bio i18n-zh">2023 年 1 月起执掌 Y Combinator。曾创办 Posterous(YC W08,被 Twitter 收购),2011-2015 年任 YC 合伙人;与 Alexis Ohanian 共同创办 Initialized Capital,种子轮投中 Coinbase——风投史上最佳种子支票之一,另投 Instacart、Flexport。以创始人优先、懂设计的早期投资风格与庞大的 YouTube 创业者受众著称。</div><div class="bio i18n-en">President &amp; CEO of Y Combinator since January 2023. Co-founded Posterous (YC W08, acquired by Twitter) and blog platform-era design tooling before becoming a YC partner (2011-2015). Co-founded Initialized Capital with Alexis Ohanian, backing Coinbase at seed — one of the best seed checks in venture history — plus Instacart and Flexport. Known for founder-first, design-literate early-stage investing and a large builder audience on YouTube.</div>
-<!--XLINKS_START--><p class="meta" style="font-size:13px;margin:10px 0">同一人物 · 姊妹站：<a href="https://aipodcast.jasonlin.tech/pp/garrytan/">听 TA 的播客访谈（AI Podcast）</a></p><!--XLINKS_END--><a class="cta" href="/?node=garrytan"><span class="i18n-zh">在关系图谱中查看 Garry Tan →</span><span class="i18n-en">View Garry Tan in the graph →</span></a>
+<a class="cta" href="/?node=garrytan"><span class="i18n-zh">在关系图谱中查看 Garry Tan →</span><span class="i18n-en">View Garry Tan in the graph →</span></a><button class="cta cta-share" onclick="shareThis(this)"><span class="i18n-zh">分享</span><span class="i18n-en">Share</span></button>
 <a class="cta2" href="https://aipodcast.jasonlin.tech/#/person/garrytan" rel="noopener"><span class="i18n-zh">听 Garry Tan 的 AI 播客 →</span><span class="i18n-en">Listen on AI Podcast →</span></a>
 
-<h2><span class="i18n-zh">时间线</span><span class="i18n-en">Timeline</span></h2><ul><li><span class="y">2008</span> Posterous (YC W08)</li><li><span class="y">2011</span> YC 合伙人</li><li><span class="y">2012</span> 共同创办 Initialized Capital · Coinbase 种子轮</li><li><span class="y">2023</span> 出任 YC 总裁兼 CEO</li></ul>
+<h2><span class="i18n-zh">时间线</span><span class="i18n-en">Timeline</span></h2><ul></ul>
 <h2><span class="i18n-zh">关系网络</span><span class="i18n-en">Connections</span></h2><a class="nbr" href="/p/samaltman.html"><b>Sam Altman</b><span>YC 总裁先后任(Altman 2014-19,Tan 2023-)</span></a>
 <a class="back" href="/"><span class="i18n-zh">← 返回完整图谱</span><span class="i18n-en">← Back to the graph</span></a>
 </div>
 <script>(function(){var b=document.getElementById('langtoggle');if(!b)return;b.addEventListener('click',function(){var en=document.documentElement.classList.contains('lang-en');var n=en?'zh':'en';document.documentElement.className='lang-'+n;try{localStorage.setItem('graphLang',n)}catch(e){}});})();</script>
+<style>.cta-share{margin-left:8px;background:transparent;color:#0a84ff;border:1px solid rgba(255,255,255,.18);cursor:pointer;font:inherit;font-weight:600}</style>
+<script>function shareThis(b){var u=document.querySelector('link[rel=canonical]').href,t=document.title,d=(document.querySelector('meta[name=description]')||{}).content||'';
+if(navigator.share){navigator.share({title:t,text:d,url:u}).catch(function(){});return;}
+try{navigator.clipboard.writeText(u).then(function(){var o=b.innerHTML;b.textContent='已复制链接 · Copied';setTimeout(function(){b.innerHTML=o},1600)})}catch(e){}}</script>
 <script>(function(){try{
 var UA=navigator.userAgent||'';
 if(/bot|crawl|spider|slurp|headless|lighthouse|bingpreview|facebookexternalhit/i.test(UA))return;

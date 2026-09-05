@@ -54,13 +54,17 @@ li a,.bio a{color:var(--blue);text-decoration:none}
 <p class="role"><span class="i18n-zh">Benchmark 普通合伙人 · 任期最长的合伙人</span><span class="i18n-en">General Partner at Benchmark · Longest-Serving Partner</span></p>
 <div class="fields"><span class="tag">us-vc</span><span class="tag">early</span></div>
 <div class="bio i18n-zh">Benchmark 任职最久的全职合伙人,退出案例包括 Twitter、Yelp 与 Elastic。AI 周期中他带 Benchmark 投进 Sierra——Bret Taylor 的客服 agent 公司,估值已超 150 亿美元。Benchmark 刻意维持小规模、平权合伙制,不设成长基金、不扩张团队,在如今 AI 领域巨型基金林立的格局里尤为醒目。</div><div class="bio i18n-en">Benchmark&#x27;s longest-serving full-time partner, with exits including Twitter, Yelp and Elastic. In the AI cycle he led Benchmark into Sierra, Bret Taylor&#x27;s customer-service agent company now valued above $15B. Benchmark&#x27;s deliberately small, equal-partnership model — no growth fund, no scale-up — stands out against the mega-funds now dominating AI.</div>
-<a class="cta" href="/?node=peterfenton"><span class="i18n-zh">在关系图谱中查看 Peter Fenton →</span><span class="i18n-en">View Peter Fenton in the graph →</span></a>
+<a class="cta" href="/?node=peterfenton"><span class="i18n-zh">在关系图谱中查看 Peter Fenton →</span><span class="i18n-en">View Peter Fenton in the graph →</span></a><button class="cta cta-share" onclick="shareThis(this)"><span class="i18n-zh">分享</span><span class="i18n-en">Share</span></button>
 
 <h2><span class="i18n-zh">时间线</span><span class="i18n-en">Timeline</span></h2><ul></ul>
 <h2><span class="i18n-zh">关系网络</span><span class="i18n-en">Connections</span></h2><a class="nbr" href="/p/marca16z.html"><b>Marc Andreessen</b><span>Small equal partnership vs mega-fund model</span></a><a class="nbr" href="/p/roelofbotha.html"><b>Roelof Botha</b><span>Benchmark × Sequoia — rival Sand Hill franchises</span></a><a class="nbr" href="/p/mikevolpi.html"><b>迈克·沃尔皮 Mike Volpi</b><span>Infrastructure and open-source era investors</span></a>
 <a class="back" href="/"><span class="i18n-zh">← 返回完整图谱</span><span class="i18n-en">← Back to the graph</span></a>
 </div>
 <script>(function(){var b=document.getElementById('langtoggle');if(!b)return;b.addEventListener('click',function(){var en=document.documentElement.classList.contains('lang-en');var n=en?'zh':'en';document.documentElement.className='lang-'+n;try{localStorage.setItem('graphLang',n)}catch(e){}});})();</script>
+<style>.cta-share{margin-left:8px;background:transparent;color:#0a84ff;border:1px solid rgba(255,255,255,.18);cursor:pointer;font:inherit;font-weight:600}</style>
+<script>function shareThis(b){var u=document.querySelector('link[rel=canonical]').href,t=document.title,d=(document.querySelector('meta[name=description]')||{}).content||'';
+if(navigator.share){navigator.share({title:t,text:d,url:u}).catch(function(){});return;}
+try{navigator.clipboard.writeText(u).then(function(){var o=b.innerHTML;b.textContent='已复制链接 · Copied';setTimeout(function(){b.innerHTML=o},1600)})}catch(e){}}</script>
 <script>(function(){try{
 var UA=navigator.userAgent||'';
 if(/bot|crawl|spider|slurp|headless|lighthouse|bingpreview|facebookexternalhit/i.test(UA))return;
