@@ -417,6 +417,11 @@ body.no-insights #graph-container {
   padding: 3px 0;
   cursor: default;
 }
+
+.legend-row.lg-click { cursor: pointer; border-radius: 6px; padding-left: 4px; padding-right: 6px; margin-left: -4px; transition: background .15s ease, opacity .15s ease; }
+.legend-row.lg-click:hover { background: rgba(255,255,255,0.08); }
+.legend-row.lg-active { background: rgba(255,255,255,0.14); }
+.legend-row.lg-dim { opacity: .45; }
 .legend-dot {
   width: 8px;
   height: 8px;
@@ -1106,13 +1111,14 @@ body.no-insights #graph-container {
 <div id="legend">
   <div class="legend-card">
     <div class="legend-heading">Organizations</div>
-    <div class="legend-row"><div class="legend-dot" style="background:var(--org-dji)"></div><span class="legend-label">China Top VC</span></div>
-    <div class="legend-row"><div class="legend-dot" style="background:var(--org-xiaomi)"></div><span class="legend-label">China CVC</span></div>
-    <div class="legend-row"><div class="legend-dot" style="background:var(--org-huawei)"></div><span class="legend-label">Corporate</span></div>
-    <div class="legend-row"><div class="legend-dot" style="background:var(--org-robotics)"></div><span class="legend-label">China Early VC</span></div>
-    <div class="legend-row"><div class="legend-dot" style="background:var(--org-consumer)"></div><span class="legend-label">Angel / Professor</span></div>
-    <div class="legend-row"><div class="legend-dot" style="background:var(--org-arvr)"></div><span class="legend-label">US Other VC</span></div>
-    <div class="legend-row"><div class="legend-dot" style="background:var(--org-overseas)"></div><span class="legend-label">US Top VC</span></div>
+    <div class="legend-row"><div class="legend-dot" style="background:var(--org-china-top)"></div><span class="legend-label">China Top VC</span></div>
+    <div class="legend-row"><div class="legend-dot" style="background:var(--org-cvc)"></div><span class="legend-label">China CVC</span></div>
+    <div class="legend-row"><div class="legend-dot" style="background:var(--org-corporate)"></div><span class="legend-label">Corporate</span></div>
+    <div class="legend-row"><div class="legend-dot" style="background:var(--org-china-early)"></div><span class="legend-label">China Early VC</span></div>
+    <div class="legend-row"><div class="legend-dot" style="background:var(--org-angel)"></div><span class="legend-label">Angel / Professor</span></div>
+    <div class="legend-row"><div class="legend-dot" style="background:var(--org-us-other)"></div><span class="legend-label">US Other VC</span></div>
+    <div class="legend-row"><div class="legend-dot" style="background:var(--org-us-top)"></div><span class="legend-label">US Top VC</span></div>
+    <div class="legend-row"><div class="legend-dot" style="background:var(--org-independent)"></div><span class="legend-label">Independent / Other</span></div>
     <div class="legend-heading">Connections</div>
     <div class="legend-row"><div class="legend-line-sample" style="border-top:2.5px solid #30d158; opacity:0.7"></div><span class="legend-label">Co-invested</span></div>
     <div class="legend-row"><div class="legend-line-sample" style="border-top:2px solid #2997ff; opacity:0.6"></div><span class="legend-label">Co-invested</span></div>
@@ -4807,6 +4813,51 @@ var body=JSON.stringify({type:'view',path:'graph-inv:'+location.pathname+locatio
 if(navigator.sendBeacon)navigator.sendBeacon('https://stats.jasonlin.tech',new Blob([body],{type:'text/plain'}));
 else fetch('https://stats.jasonlin.tech',{method:'POST',headers:{'Content-Type':'text/plain'},body:body,keepalive:true});
 }catch(e){}})();
+
+// ===== 图例可点筛选(2026-09-28)：按节点实际渲染颜色匹配，与筛选按钮互斥 =====
+(function(){
+  if(typeof nodeGroups==='undefined'||typeof linkLines==='undefined')return;
+  var legend=document.getElementById('legend'); if(!legend)return;
+  var rows=[].slice.call(legend.querySelectorAll('.legend-row')).filter(function(r){return r.querySelector('.legend-dot');});
+  if(!rows.length)return;
+  var probe=document.createElement('span'); probe.style.display='none'; document.body.appendChild(probe);
+  function norm(c){ probe.style.color=''; probe.style.color=c; return getComputedStyle(probe).color; }
+  var active=null;
+  function clearAll(){
+    active=null;
+    rows.forEach(function(r){r.classList.remove('lg-active');r.classList.remove('lg-dim');});
+    nodeGroups.style('opacity',null); linkLines.style('opacity',null);
+  }
+  rows.forEach(function(row){
+    var dot=row.querySelector('.legend-dot');
+    row.classList.add('lg-click');
+    row.setAttribute('role','button'); row.setAttribute('tabindex','0');
+    function run(){
+      if(active===row){ clearAll(); return; }
+      var target=norm(getComputedStyle(dot).backgroundColor);
+      var match={};
+      nodeGroups.each(function(d){
+        var c=this.querySelector('.node-circle');
+        if(c&&norm(getComputedStyle(c).fill)===target) match[d.id]=1;
+      });
+      active=row;
+      rows.forEach(function(r){ r.classList.toggle('lg-active',r===row); r.classList.toggle('lg-dim',r!==row); });
+      document.querySelectorAll('.filter-pill').forEach(function(b){b.classList.remove('active');});
+      var allPill=document.querySelector('.filter-pill[data-filter="all"]'); if(allPill)allPill.classList.remove('active');
+      nodeGroups.style('opacity',function(d){return match[d.id]?1:0.04;});
+      linkLines.style('opacity',function(l){
+        var a=typeof l.source==='object'?l.source.id:l.source, b=typeof l.target==='object'?l.target.id:l.target;
+        return (match[a]&&match[b])?0.5:0.02;
+      });
+    }
+    row.addEventListener('click',run);
+    row.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();run();} });
+  });
+  document.querySelectorAll('.filter-pill').forEach(function(b){ b.addEventListener('click',function(){
+    active=null; rows.forEach(function(r){r.classList.remove('lg-active');r.classList.remove('lg-dim');});
+  });});
+})();
+
 </script>
 <!--SITE_INDEX_START--><style>/* 站点地图:排在页脚里,与版权信息同一套视觉语言;同时给爬虫通向 /p/ 分享页的路径。
 默认收起,但不能用 display:none 藏(只给爬虫看的链接会被判作弊)。 */
